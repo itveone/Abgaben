@@ -1,151 +1,150 @@
-// Praktikumabgabe 2
-// Primfaktorzerlegung
+//Labor 2: Primfaktorzerlegung
 // Author: Mariam Ahmadi
-// Datum: 24.10.22
-// Version: 1 (Erstabgabe)
-
-
-//Formalitäten: Includes & define (scanf)
-#define _CRT_SECURE_NO_WARNINGS
-#include <stdio.h> //Standardbibliothek (printf)
-#include <stdlib.h> //Bib
-//#include <math.h> //Rechen Bib ->Nochmal anschauen
-
-//Mitteilung/Auflistung (Funktionen)
-int is_even(int);
-int is_prime(int);
-void print_prime_factors(int); //"Void", da die Funktion nur ausgibt
+// Datum: 24.10.2022
 
 
 
+#define _CRT_SECURE_NO_WARNINGS 
+#include<stdio.h>
 
-//Ausführung (Frontend)
+int is_even(int num);
+int is_prime(int num);
+void print_primes(int num);
+void primefactors(int num);
+
 int main(void)
 {
+    printf("Hallo User :). In this program you can check if a\nnatural number from 1 to infinity is a prime number\nand if it is even or uneven.\n");
+    printf("Please enter a number !\n");
+    //Aufgabe 2.2: Gerade und ungeraden Zahlen 
+    unsigned int num;
+    scanf("%u", &num);
 
-	//AUFGABE 2.2: Gerade oder ungerade Zahl
+    if (is_even(num))
+    {
+        printf("The number is even ");
+    }
+    else
+    {
+        printf("The number is odd ");
+    }
 
-	//Deklaration der "unsigned int"
-	unsigned int n;
-	printf("Tippe eine Zahl ein: \n");
-	scanf("%u", &n); //%u -> Platzhalter für unsigend int (für die Zahl), &n -> Adresse für n
+    //Aufgabe 2.3: Primzahl oder keine Primzahl
+    if (is_prime(num))
+    {
+        printf("and is a prime.");
+    }
+    else
+    {
+        printf("and is not a prime.");
+    }
 
-	int n_is_even = is_even(n); //Lokale Variable mit dem Rückhabewert der Funktion is_even
+    printf("\n");
 
-	if (n_is_even) // if-Bedingung prüft ob die Zahl größer als "0" ist bzw. eine Bedinung erfüllt
-	{
-		printf("%u ist gerade.\n", n);
-	}
-
-	else
-	{
-		printf("%u ist ungerade.\n", n);
-	}
-
-
-	//AUFGABE 2.3: Primzahl oder keine Primzahl
-
-	int n_is_prime = is_prime(n); //Lokaler Variablen mit den Rückgabewert der Funktion is_prime
-
-	if (n_is_prime) // if-Bedingung prüft ob (die Zahl größer als "0" ist bzw.) eine Bedinung erfüllt wird
-	{
-		printf("%u ist eine Primzahl.\n", n); //Terminalausgabe bei gerader Zahl
-	}
-
-	else
-	{
-		printf("%u ist keine Primzahl.\n", n); //Terminalausgabe bei ungerader Zahl
-	}
+    //Aufgabe 2.4: Liste von Primzahl (Begrenzung zu 1000)
+    if (num <= 1000)
+    {
+        printf("List of primes:\n"); //Textausgabe zur 2.4
+        print_primes(num);
+    }
 
 
-	//AUFGABE 2.4: Liste der vorhandenen Primzahlen (Liste)
-	for (int i = 0; i < n; i++) //Zählergesteuerte Schleife, Startvariable "i"
-	{
-		if (is_prime(i)) //
-		{
-			printf("%3d", i); //Primfaktoren werden horizontal aufgelistet, mit einem Padding/Abstand
-		}
-	}
+    //Aufgabe 2.5
+    printf("\n");
+    printf("List of primefactors:\n"); //Textausgabe zu 2.5
+    primefactors(num);
+    printf("\n");
 
-	print_prime_factors(n); //Funktion, um die Primfaktorzerlegung anzugeben im Terminal
+    return 0;
+}
+//MAIN FUNKTION ENDE
 
-	return 0;
 
+
+//Funktion 2.2: Ist Zahl gerade /ungerade -> Rechnung mit Modulo
+int is_even(int num)
+{
+    if (num % 2 == 0)
+    {
+        return 1;
+    }
+    else
+    {
+        return 0;
+    }
+
+    return 0;
 }
 
+//Funktion: Ist die Zahl eine Primzahl oder nicht -> Hochaddieren 
 
-//Definition der Funktion (Backend)
+int is_prime(int num)
+{
+    if (is_even(num))
+    {
+        return 0;
+    }
 
-	//Aufgabe 2.2 Funktion: Gerade/Ungerade Zahl, Rechnung mit Modulo
-	int is_even(int n)
-	{
-		int even = ((n % 2) == 0); //n = Wert -> Testung (Gerade Zahl)
-		return even; //Return Value gibt unseren Wert aus
+    for (int i = 3; i < num; i += 2) // austesten jeder ungeraden zahl ob diese die eingegebene zahl teilen kann
+    {
+        if (num % i == 0)
+        {
+            return 0;
+        }
+    }
 
-	}
+    return 1;
+}
 
+//Funktion 2.4
+void print_primes(int num) // liste für die primenzahlen bis zur eingegebenen zahl
+{
 
+    for (int i = 3; i < num; i += 2) // schleife: jede zahl bis zur eingegebenen zahl wird getestet ob primezahl. wenn primzahl dann ausgeben
+    {
+        if (is_prime(i))
+        {
+            printf("%4d ", i);
+        }
 
+    }
 
-	//Aufgabe 2.3 Funktion: Primzahl/Keine Primzahl
+    return;
+}
 
-	int is_prime(int n) //Funktion: Primzahlausgabe 
-	{
-		int smallest_prime = 2;
-		if (n == 0) return 0; //Diese "Sonderfälle" werden gecodet, damit nicht eine Primfaktorzerlegung bei n=0 & n=1 stattfindet
-		if (n == 1) return 0; //
-		if (n == 2) return 1; //Die Zahl "2" ist durch sich selbst teilbar bzw. "gerade". Ohne einem Value von "return 1" wird sie NICHT als Primzahl ausgegeben.
+//Funktion 2.5
+void primefactors(int num) // Die Liste mit den Primzahlen wird berechnet/ausgelistet, die bis zur int Zahl geht
+{
 
-		if (is_even(n)) return 0;
+    int startnum = num;
 
-		for (int i = smallest_prime + 1; i < n; i += 2) // i+=2 ist das selbe wie i = i+2 // Zahl n wird hochaddiert (->Bedingung)
-		{
-			if ((n % i) == 0) //Rechnung mit Modulo -> Keinen Restbetrag
-			{
-				return 0;
-			}
-		}
+    while ((num%2) == 0)
+    {
+         printf("2 ");
+         num = num / 2;
+    }
+        
+    for (int i = 3; i <= startnum; i=i+2)
+    {
+        while (num % i == 0)      
+        {
+            num = num / i;
+            printf("%d ", i);
+        }
+    }
 
-		return 1;
-	}
+//    while (num % 2 == 0)
+//    {
+//        num = num / 2;
+//        printf("2 ");
+//    }
+//
+//    for (int i = 3; i < num; i += 2) // Der  Computer fängt ab der Zahl 3 an und addiert +2 => Der PC gibt uns die Primzahlen. Man kann auch ab "2" anfangen, und "i++
+//       // " angeben,  damit wir ab der ersten Primzahl anfangen und alle Zahlen durchgehen, 
+//        {
+//       
+//
+//}
 
-	//2.4 Aufgabe: Liste von Primfaktorzerlegung
-	//Verschachtelung
-
-	void print_prime_factors(int n)
-	{
-		int smallest_prime = 2;
-		int factor = smallest_prime; //Als erste Primzahl wird 2 ausgegeben
-
-		if (n == 0) return; // Die Zahl 0 wird als "n" blockiert
-
-		//do-while-Schleife: Kopfgesteuerte Schleife -> Bedingung wird am Ende erst geprüft
-		do {
-
-			//Erst Ausführung: Rechnung mit Modulo 
-			int is_divisible = (n % factor) == 0; //Die Zahl ist teilbar, wenn der Rest von Modulo gleich 0 ist
-
-			if (is_divisible)
-			{
-				n = n / factor;
-				printf("\n"); //Breakpoint, damit die Primzahlfaktoren nicht ohne Abstand aufgelistet werden
-				printf("%i", factor);
-
-			}
-			else
-			{
-
-		//AUFGABE 2.5: Addierung/Rechnung zur nächsten Primzahl 
-				do
-				{
-					factor++; //Faktor soll solange erhöht werden, bis eine neue Primzahl gegeben wird
-
-				} while (!is_prime(factor)); //Es soll hochgezählt werden, solange eine Zahl NICHT eine Primzahl ist
-			}
-
-		} while (n > 1);
-
-		printf("\n"); //code.cs50 terminal (Unix Server) -> Eingabefeld steht durch den Breakpoint nicht in der selben Reihe wie der letzet Primfaktor
-
-		return;
-	}
+    return;
+ }
