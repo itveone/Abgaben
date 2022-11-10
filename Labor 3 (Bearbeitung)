@@ -51,7 +51,7 @@ int main(void)
 {
 	//Schritt 4: Lottozahlen tippen
 	int tipp[6];
-	int gezogen[6];
+	int gezogen[6]; // mnicht mögliche ziehbare zahl
 
 	//Schritt 4: Intro UI 
 	printf("___________________________________\n\n");
@@ -69,23 +69,29 @@ int main(void)
 
 
 	//Schritt 5: Lottozahlen ziehen
-	for (int i = 0; i < 6; i++)
+	for (int i = 0; i < 6; i++) // int max. 6 = 6x Lottozahlen // i = shcon gezogen wordne
 	{
+		//Eine gezogene Zahl =/ Doppelt ziehen
 		int zahl;
 		bool doppelt = false;
 		srand(time(NULL));
 		do {
 			doppelt = false;
-			zahl = rand() % 49 + 1; //Intervall der Lottozahlen
+			zahl = (rand() % 49) + 1; //Intervall der Lottozahlen zahl von 1 bis 50 
 
 
-			for (int j = 0; j < i; j++) {
-				if (gezogen[j] == zahl) {
-					doppelt = true;
+			for (int j = 0; j < i; j++)  // i = 3 => bei j = 2 -> bricht ab  // j steht für speicher der bereits gezogenen zahlen // damit lottozahl nicht doppelt
+			{
+				if (gezogen[j] == zahl) // bereits gezogene zahl == neue zahl?
+				{
+					doppelt = true; 
 					break;
 				}
 			}
-		} while (doppelt);
+			if (doppelt == true) {
+				printf("fehler zahl doppelt");
+			}
+		} while (doppelt); // wenn doppelt = true -> wird wiederholt
 		gezogen[i] = zahl;
 	}
 
