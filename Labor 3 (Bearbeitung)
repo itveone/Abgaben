@@ -1,0 +1,140 @@
+//Programmieren 1: Praktikum 3 (Prof. Herr Eger)
+//Aufgabe: Lottoschein ziehen
+//Student/in: Mariam Ahmadi
+//Datum: 5.11.2022
+//Version: Erster Versuch (beta)
+
+
+//Define's
+#define _CRT_SECURE_NO_WARNINGS
+
+//Include's (Libraries)
+#include <stdio.h>
+#include <stdbool.h>	//boolean
+#include <stdlib.h>     //srand, rand
+
+
+
+//Schritt 1: Funktion "get short" -> Sichere Abfrage einer ganzen Zahl vom Typ Short
+short getShort(			// [out] user input
+	char text[], int min, int max)		// [in] question text for user input
+{
+	short value;		// user input
+	int finished = 0;	// flag for correct user input
+	char ch;			// character behind number
+	int retVal;			// return value of scanf
+
+	do {
+		// get user input
+		printf("%s:", text);
+		ch = '\0'; // NULL character
+		retVal = scanf("%hd%c", &value, &ch);
+		// check for valid user input
+
+		if (retVal != 2) printf("Das war keine korrekte Zahl!\n\n");
+		else if (ch != '\n') printf("Unerwartete Zeichen hinter der Zahl!\n\n");
+		else if (value<min || value>max) printf("Wert ausserhalb des erlaubten Berreiches!\n\n"); // Schritt 3: Value main & max
+		else finished = 1;
+		// clear input stream
+
+		while (ch != '\n') scanf("%c", &ch);
+		// repeat if not finished
+
+	} while (!finished);
+	// return user input
+
+	return value;
+}
+
+
+int main(void)
+{
+	//Schritt 4: Lottozahlen tippen
+	int tipp[6];
+	int gezogen[6];
+
+	//Schritt 4: Intro UI 
+	printf("___________________________________\n\n");
+	printf("Lotto 6 aus 49!\nWaehlen Sie Ihre 6 Lottozahlen.\n \n");
+	printf("Bestaetigen Sie Ihre Zahlen mit der Entertaste.\n");
+	printf("___________________________________\n\n");
+
+	//Schritt 4: Tipp's / Arrays 
+	tipp[0] = getShort("Geben Sie Ihren 1. Tipp ein", 1, 49); //Min-Wert: 1 & Max-Wert: 49
+	tipp[1] = getShort("Geben Sie Ihren 2. Tipp ein", 1, 49);
+	tipp[2] = getShort("Geben Sie Ihren 3. Tipp ein", 1, 49);
+	tipp[3] = getShort("Geben Sie Ihren 4. Tipp ein", 1, 49);
+	tipp[4] = getShort("Geben Sie Ihren 5. Tipp ein", 1, 49);
+	tipp[5] = getShort("Geben sie Ihren 6. Tipp ein", 1, 49);
+
+
+	//Schritt 5: Lottozahlen ziehen
+	for (int i = 0; i < 6; i++)
+	{
+		int zahl;
+		bool doppelt = false;
+		srand(time(NULL));
+		do {
+			doppelt = false;
+			zahl = rand() % 49 + 1; //Intervall der Lottozahlen
+
+
+			for (int j = 0; j < i; j++) {
+				if (gezogen[j] == zahl) {
+					doppelt = true;
+					break;
+				}
+			}
+		} while (doppelt);
+		gezogen[i] = zahl;
+	}
+
+	//Schritt 6: Gezogene Zahlen werden (neu) aufgelistet & verglichen
+	printf("\nDie Zahlen sind: %i, %i, %i, %i, %i, %i \n", gezogen[0], gezogen[1], gezogen[2], gezogen[3], gezogen[4], gezogen[5]);
+
+	//Schritt 7a: Gewinnquote bestimmen (Rechnung)
+	int richtige = 0;
+
+	for (int i = 0; i < 6; i++) // (i < 6 -> Hochaddiert)
+	{
+		for (int j = 0; j < 6; j++) // (j < 6 -> Hochaddiert)
+		{
+			if (tipp[i] == gezogen[j]) // (Übereinstimmung wird getestet mit dem Tipp/User Input & den zufälligen gezogenen Zahlen)
+			{
+				richtige++; //(Falls Input/Tipp übereinstimmt, werden alle übereinstimmenden Werte als richtig ausgewertet)
+				break; // (Ende der Bedingung)
+			}
+		}
+	}
+
+	printf("\nSie haben %i richtige Zahle/-n! \n\n\n", richtige); //Auswertung (Text) der übereinstimmenden Zahlen
+
+
+	//Schritt 7b: Gewinnquote bestimmen (Bedingung)
+	if (richtige == 2)
+	{
+		printf("Sie haben 5 Euro gewonnen");
+	}
+
+	else if (richtige == 3)
+	{
+		printf("Sie haben 50 Euro gewonnen");
+	}
+
+	else if (richtige == 4)
+	{
+		printf("Sie haben 1000 Euro gewonnen");
+	}
+
+	else if (richtige == 5)
+	{
+		printf("Sie haben 50,000 Euro gewonnen");
+	}
+
+	else if (richtige == 6)
+	{
+		printf("JACKPOT!!! Sie haben 1,000,000 Euro gewonnen!");
+	}
+
+	return 0;
+}
