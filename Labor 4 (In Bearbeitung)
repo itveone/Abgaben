@@ -20,8 +20,9 @@
 
 
 
+
 //Funktionen deklarieren
-void resetBoard(char board[3][3]);
+void resetBoard(char board[3][3]); //Funktionen greift auf char board[3][3]
 void printBoard(char board[3][3]);
 int checkFreeSpaces(char board[3][3]);
 void playerMove(char board[3][3]);
@@ -34,8 +35,8 @@ int main()
     char winner = ' ';
     char response = ' ';
     int test;
-    char board[3][3];
-    char *pboard; 
+    char board[3][3]; //Array
+    char *pboard;  //Pointer auf board
 
     //INTRO-TEXT:SPIELEINLEITUNG
     printf("___________________________________________________________________\n\n");
@@ -57,16 +58,16 @@ int main()
     {
         winner = ' ';
         response = ' ';
-        pboard = board;
-        resetBoard(pboard);
-
+        pboard = board; //Pointer von board greift auf die Adresse von dem ersten Element des Arrays, pboard & board haben den selben Wert 
+        resetBoard(pboard); // Der Pointer pboard wird der Funktion resetboard übergeben (Pointer -> Referenzvariablen von Speicheradressen)
+        printf(pboard);
 
         while (winner == ' ' && checkFreeSpaces(pboard) != 0)
         {
-            printBoard(pboard);
+            printBoard(pboard); //Funktion greift auf die Adresse von char durch Pointer 
 
-            playerMove(pboard);
-            winner = checkWinner(pboard);
+            playerMove(pboard); //Funktion greift auf die Adresse von char durch Pointer 
+            winner = checkWinner(pboard); 
             if (winner != ' ' || checkFreeSpaces(pboard) == 0)
             {
                 break;
