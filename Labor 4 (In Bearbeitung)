@@ -11,8 +11,6 @@
 
 //Defines (Standard)
 #define _CRT_SECURE_NO_WARNINGS
-#define PLAYER 'X';
-#define COMPUTER 'O';
 
 //Bibliothek
 #include <stdio.h>
@@ -21,16 +19,14 @@
 #include <time.h>
 
 
-//Globale Variablen = !!
-char board[3][3];
 
 //Funktionen deklarieren
-void resetBoard();
-void printBoard();
-int checkFreeSpaces();
-void playerMove();
-void computerMove();
-char checkWinner();
+void resetBoard(char board[3][3]);
+void printBoard(char board[3][3]);
+int checkFreeSpaces(char board[3][3]);
+void playerMove(char board[3][3]);
+void computerMove(char board[3][3]);
+char checkWinner(char board[3][3]);
 void printWinner(char);
 
 int main()
@@ -38,6 +34,8 @@ int main()
     char winner = ' ';
     char response = ' ';
     int test;
+    char board[3][3];
+    char *pboard; 
 
     //INTRO-TEXT:SPIELEINLEITUNG
     printf("___________________________________________________________________\n\n");
@@ -54,33 +52,35 @@ int main()
     printf("                           LET'S GO\n");
     printf("___________________________________________________________________\n\n");
     //Einleitung beendet
-     
+
     do
     {
         winner = ' ';
         response = ' ';
-        resetBoard();
+        pboard = board;
+        resetBoard(pboard);
 
-        while (winner == ' ' && checkFreeSpaces() != 0)
+
+        while (winner == ' ' && checkFreeSpaces(pboard) != 0)
         {
-            printBoard();
+            printBoard(pboard);
 
-            playerMove();
-            winner = checkWinner();
-            if (winner != ' ' || checkFreeSpaces() == 0)
+            playerMove(pboard);
+            winner = checkWinner(pboard);
+            if (winner != ' ' || checkFreeSpaces(pboard) == 0)
             {
                 break;
             }
 
-            computerMove();
-            winner = checkWinner();
-            if (winner != ' ' || checkFreeSpaces() == 0)
+            computerMove(pboard);
+            winner = checkWinner(pboard);
+            if (winner != ' ' || checkFreeSpaces(pboard) == 0)
             {
                 break;
             }
         }
 
-        printBoard();
+        printBoard(pboard);
         printWinner(winner);
 
         printf("\n Moechtest du es nochmal versuchen :) ? (y/n): ");
@@ -96,7 +96,7 @@ int main()
     return 0;
 }
 
-void resetBoard()
+void resetBoard(char board[3][3])
 {
     for (int i = 0; i < 3; i++)
     {
@@ -105,8 +105,9 @@ void resetBoard()
             board[i][j] = ' ';
         }
     }
+    return board;
 }
-void printBoard() // Spielfeld wird gedruckt
+void printBoard(char board[3][3]) // Spielfeld wird gedruckt
 {
 
     printf(" %c | %c | %c ", board[0][0], board[0][1], board[0][2]);
@@ -116,7 +117,7 @@ void printBoard() // Spielfeld wird gedruckt
     printf(" %c | %c | %c ", board[2][0], board[2][1], board[2][2]);
     printf("\n\n");
 }
-int checkFreeSpaces() //Freie Felder werden untersucht
+int checkFreeSpaces(char board[3][3]) //Freie Felder werden untersucht
 {
     int freeSpaces = 9;
 
@@ -132,7 +133,7 @@ int checkFreeSpaces() //Freie Felder werden untersucht
     }
     return freeSpaces;
 }
-void playerMove()
+void playerMove(char board[3][3])
 {
     int x;
     int y;
@@ -145,17 +146,17 @@ void playerMove()
         printf("________________________________________________________________\n\n");
         printf("    SPIELANWEISUNGEN:\n");
         printf("    Gebe bitte einen Wert von 1 bis 3 ein fuer eine Zeile:");
-        do{
-        testZeile = scanf("%d", &x);
-        while ((getchar()) != '\n') {}
+        do {
+            testZeile = scanf("%d", &x);
+            while ((getchar()) != '\n') {}
         } while (testZeile != 1);
         x--;
         printf("    Gebe bitte einen Wert von 1 bis 3 fuer eine Spalte:");
-        do{
-        testSpalte = scanf("%d", &y);
-        while ((getchar()) != '\n') {}
+        do {
+            testSpalte = scanf("%d", &y);
+            while ((getchar()) != '\n') {}
 
-         } while (testSpalte != 1);
+        } while (testSpalte != 1);
         y--;
         printf("________________________________________________________________\n\n");
 
@@ -165,20 +166,21 @@ void playerMove()
         }
         else
         {
-            board[x][y] = PLAYER;
+            board[x][y] = 'O'; //Player
             break;
         }
     } while (board[x][y] != ' ');
 
 }
-void computerMove()
+void computerMove(char board[3][3])
 {
     //creates a seed based on current time
-    srand((unsigned int) time(NULL)); // casting == datentyp konvertieren von time_t (Rueckgabewert der funktion time) zu unsigned int
+    srand((unsigned int)time(NULL)); // casting == datentyp konvertieren von time_t (Rueckgabewert der funktion time) zu unsigned int
     int x;
     int y;
+    char* pboard = board;
 
-    if (checkFreeSpaces() > 0)
+    if (checkFreeSpaces(pboard) > 0)
     {
         do
         {
@@ -186,14 +188,14 @@ void computerMove()
             y = rand() % 3;
         } while (board[x][y] != ' ');
 
-        board[x][y] = COMPUTER;
+        board[x][y] = 'X'; //Computer
     }
     else
     {
         printWinner(' ');
     }
 }
-char checkWinner()
+char checkWinner(char board[3][3])
 {
     //Untersucht die Zeilen
     for (int i = 0; i < 3; i++)
@@ -225,11 +227,11 @@ char checkWinner()
 }
 void printWinner(char winner)
 {
-    if (winner == PLAYER)
+    if (winner == 'O') //Player
     {
         printf("Du hast gewonnen :)");
     }
-    else if (winner == COMPUTER)
+    else if (winner == 'X') //Computer
     {
         printf("Du hast leider verloren :(");
     }
