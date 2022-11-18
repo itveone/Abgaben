@@ -60,7 +60,7 @@ int main()
         response = ' ';
         pboard = board; //Pointer von board greift auf die Adresse von dem ersten Element des Arrays, pboard & board haben den selben Wert 
         resetBoard(pboard); // Der Pointer pboard wird der Funktion resetboard übergeben (Pointer -> Referenzvariablen von Speicheradressen)
-        printf(pboard);
+        
 
         while (winner == ' ' && checkFreeSpaces(pboard) != 0)
         {
