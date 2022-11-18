@@ -1,0 +1,242 @@
+//__________________________________
+// 
+//Programmieren-Praktikum: Aufgabe 4
+//Thema: Tic Tac Toe
+//Author: Mariam Ahmadi
+//Datum: 16.11.2022
+//Version: 1 (Bearbeitung)
+// 
+//__________________________________
+
+
+//Defines (Standard)
+#define _CRT_SECURE_NO_WARNINGS
+
+//Bibliothek
+#include <stdio.h>
+#include <stdlib.h>
+#include <ctype.h>
+#include <time.h>
+
+
+
+
+//Funktionen deklarieren
+void resetBoard(char board[3][3]); //Funktionen greift auf char board[3][3]
+void printBoard(char board[3][3]);
+int checkFreeSpaces(char board[3][3]);
+void playerMove(char board[3][3]);
+void computerMove(char board[3][3]);
+char checkWinner(char board[3][3]);
+void printWinner(char);
+
+int main()
+{
+    char winner = ' ';
+    char response = ' ';
+    int test;
+    char board[3][3]; //Array
+    char* pboard;  //Pointer auf board
+
+    //INTRO-TEXT:SPIELEINLEITUNG
+    printf("___________________________________________________________________\n\n");
+    printf("                    WILLKOMMEN BEI TIC TAC TOE!\n\n");
+    printf("___________________________________________________________________\n\n");
+
+    printf("    Spielanleitung:\n");
+    printf("    In Tic Tac Toe geht es ums Gewinnen und Spasz haben !\n");
+    printf("    Hast du als Spieler drei Symbole in einer diagonalen,\n");
+    printf("    senkrechten oder horizontalen Reihe gesetzt, hast du gewonnen. \n");
+    printf("    Viel Spasz :)\n\n");
+
+    printf("___________________________________________________________________\n\n");
+    printf("                           LET'S GO\n");
+    printf("___________________________________________________________________\n\n");
+    //Einleitung beendet
+
+    do
+    {
+        winner = ' ';
+        response = ' ';
+        pboard = board; //Pointer von board greift auf die Adresse von dem ersten Element des Arrays, pboard & board haben den selben Wert 
+        resetBoard(pboard); // Der Pointer pboard wird der Funktion resetboard übergeben (Pointer -> Referenzvariablen von Speicheradressen)
+        //printf(pboard);
+
+        while (winner == ' ' && checkFreeSpaces(pboard) != 0)
+        {
+            printBoard(pboard); //Funktion greift auf die Adresse von char durch Pointer 
+
+            playerMove(pboard); //Funktion greift auf die Adresse von char durch Pointer 
+            winner = checkWinner(pboard);
+            if (winner != ' ' || checkFreeSpaces(pboard) == 0)
+            {
+                break;
+            }
+
+            computerMove(pboard);
+            winner = checkWinner(pboard);
+            if (winner != ' ' || checkFreeSpaces(pboard) == 0)
+            {
+                break;
+            }
+        }
+
+        printBoard(pboard);
+        printWinner(winner);
+
+        printf("\n Moechtest du es nochmal versuchen :) ? (y/n): ");
+        //scanf("%c"); 
+        do {
+            test = scanf("%c", &response);
+            while ((getchar()) != '\n') {}
+        } while (test != 1);
+        //response = toupper(response); //achtung bei scanf und toupper !
+    } while (response == 'y');
+
+
+    return 0;
+}
+
+void resetBoard(char board[3][3])
+{
+    for (int i = 0; i < 3; i++)
+    {
+        for (int j = 0; j < 3; j++)
+        {
+            board[i][j] = ' ';
+        }
+    }
+    return board;
+}
+void printBoard(char board[3][3]) // Spielfeld wird gedruckt
+{
+
+    printf(" %c | %c | %c ", board[0][0], board[0][1], board[0][2]);
+    printf("\n---|---|---\n");
+    printf(" %c | %c | %c ", board[1][0], board[1][1], board[1][2]);
+    printf("\n---|---|---\n");
+    printf(" %c | %c | %c ", board[2][0], board[2][1], board[2][2]);
+    printf("\n\n");
+}
+int checkFreeSpaces(char board[3][3]) //Freie Felder werden untersucht
+{
+    int freeSpaces = 9;
+
+    for (int i = 0; i < 3; i++)
+    {
+        for (int j = 0; j < 3; j++)
+        {
+            if (board[i][j] != ' ')
+            {
+                freeSpaces--;
+            }
+        }
+    }
+    return freeSpaces;
+}
+void playerMove(char board[3][3])
+{
+    int x;
+    int y;
+    int testZeile;
+    int testSpalte;
+
+    do
+    {
+        // Anweisung für den Spieler (Ziel/Spalte)
+        printf("________________________________________________________________\n\n");
+        printf("    SPIELANWEISUNGEN:\n");
+        printf("    Gebe bitte einen Wert von 1 bis 3 ein fuer eine Zeile:");
+        do {
+            testZeile = scanf("%d", &x);
+            while ((getchar()) != '\n') {}
+        } while (testZeile != 1);
+        x--;
+        printf("    Gebe bitte einen Wert von 1 bis 3 fuer eine Spalte:");
+        do {
+            testSpalte = scanf("%d", &y);
+            while ((getchar()) != '\n') {}
+
+        } while (testSpalte != 1);
+        y--;
+        printf("________________________________________________________________\n\n");
+
+        if (board[x][y] != ' ') //Freies Feld ist nicht vorhanden bzw es ist besetzt
+        {
+            printf("Dieser Schritt ist leider ungültig !\n"); //Reaktion
+        }
+        else
+        {
+            board[x][y] = 'O'; //Player
+            break;
+        }
+    } while (board[x][y] != ' ');
+
+}
+void computerMove(char board[3][3])
+{
+    //creates a seed based on current time
+    srand((unsigned int)time(NULL)); // casting == datentyp konvertieren von time_t (Rueckgabewert der funktion time) zu unsigned int
+    int x;
+    int y;
+    char* pboard = board;
+
+    if (checkFreeSpaces(pboard) > 0)
+    {
+        do
+        {
+            x = rand() % 3;
+            y = rand() % 3;
+        } while (board[x][y] != ' ');
+
+        board[x][y] = 'X'; //Computer
+    }
+    else
+    {
+        printWinner(' ');
+    }
+}
+char checkWinner(char board[3][3])
+{
+    //Untersucht die Zeilen
+    for (int i = 0; i < 3; i++)
+    {
+        if (board[i][0] == board[i][1] && board[i][0] == board[i][2])
+        {
+            return board[i][0];
+        }
+    }
+    //Untersucht die Spalten
+    for (int i = 0; i < 3; i++)
+    {
+        if (board[0][i] == board[1][i] && board[0][i] == board[2][i])
+        {
+            return board[0][i];
+        }
+    }
+    //Untersucht die Diagonalen
+    if (board[0][0] == board[1][1] && board[0][0] == board[2][2])
+    {
+        return board[0][0];
+    }
+    if (board[0][2] == board[1][1] && board[0][2] == board[2][0])
+    {
+        return board[0][2];
+    }
+
+    return ' ';
+}
+void printWinner(char winner)
+{
+    if (winner == 'O') //Player
+    {
+        printf("Du hast gewonnen :)");
+    }
+    else if (winner == 'X') //Computer
+    {
+        printf("Du hast leider verloren :(");
+    }
+    else {
+        printf("Es ist unentschieden !");
+    }
+}
