@@ -22,7 +22,7 @@
 
 
 //Funktionen deklarieren
-void resetBoard(char board[3][3]); //Funktionen greift auf char board[3][3]
+void resetBoard(char board[3][3]); //Passing the array to the function. The function can work with the 2-dimensional array 
 void printBoard(char board[3][3]);
 int checkFreeSpaces(char board[3][3]);
 void playerMove(char board[3][3]);
@@ -32,11 +32,12 @@ void printWinner(char);
 
 int main()
 {
-    char winner = ' ';
-    char response = ' ';
-    int test;
+    //VARIABLEN
+    char winner = ' '; //Leerzeichen
+    char response = ' '; //Leerzeichen
+    int test; // Testung
     char board[3][3]; //Array
-    char* pboard;  //Pointer auf board
+    char* pboard;  //Pointer auf Adresse von board
 
     //INTRO-TEXT:SPIELEINLEITUNG
     printf("___________________________________________________________________\n\n");
@@ -54,50 +55,51 @@ int main()
     printf("___________________________________________________________________\n\n");
     //Einleitung beendet
 
-    do
+    do //do-while: Wiederhole den Vorgang so oft, bis die Bedingung erfüllt wird. Durch break wird die while beendet. Condition wird am Ende geprüft
     {
-        winner = ' ';
-        response = ' ';
-        pboard = board; //Pointer von board greift auf die Adresse von dem ersten Element des Arrays, pboard & board haben den selben Wert 
+        winner = ' '; //Leerzeichen
+        response = ' '; //Leerzeichen
+        pboard = board; //Pointer von board zeigt auf das erste Element vom Array, pboard hat diesen Wert nun 
         resetBoard(pboard); // Der Pointer pboard wird der Funktion resetboard übergeben (Pointer -> Referenzvariablen von Speicheradressen)
         //printf(pboard);
 
-        while (winner == ' ' && checkFreeSpaces(pboard) != 0)
+        //LET'S PLAY - GROBER ABLAUF
+        while (winner == ' ' && checkFreeSpaces(pboard) != 0) //(Gewinner ist nicht vorhanden & Condition für checkFreeSpaces ungleich false) -> Kein Gewinner vorhanden & Felder noch vorhanden
         {
-            printBoard(pboard); //Funktion greift auf die Adresse von char durch Pointer 
+            printBoard(pboard); //Funktion greift auf die Adresse von char durch Pointer  -> Board wird ausgedruckt
 
-            playerMove(pboard); //Funktion greift auf die Adresse von char durch Pointer 
-            winner = checkWinner(pboard);
-            if (winner != ' ' || checkFreeSpaces(pboard) == 0) //Wenn es keinen gewinner gibt dann wird die while wiederholt bzw neui ausgeführt 
+            playerMove(pboard); //Funktion greift auf die Adresse von char durch Pointer -> Der USer spielt
+            winner = checkWinner(pboard); //Es wird nach diesem Zug kontrolliert ob wir jetzt schon einen Gewinner haben
+            if (winner != ' ' || checkFreeSpaces(pboard) == 0) //Wenn es keinen Gewinner gibt dann wird die while wiederholt bzw neu ausgeführt 
             {
                 break;
             }
 
-            computerMove(pboard);
-            winner = checkWinner(pboard);
-            if (winner != ' ' || checkFreeSpaces(pboard) == 0) //Zeile zuhause anschauen
+            computerMove(pboard); //Der Computer setzt einen Zug
+            winner = checkWinner(pboard); //Nach diesem Zug wird kontrolliert ob wir einen Gewinner haben
+            if (winner != ' ' || checkFreeSpaces(pboard) == 0) //Zeile zuhause anschauen !! -> //Wenn es keinen Gewinner gibt dann wird die while wiederholt bzw neu ausgeführt 
             {
                 break;
             }
         }
 
-        printBoard(pboard);
-        printWinner(winner);
+        printBoard(pboard); //Neues Feld wird ausgedruckt (Ende)
+        printWinner(winner); //Der Gewinner wird erwähnt
 
-        printf("\n Moechtest du es nochmal versuchen :) ? (y/n): ");
+        printf("\n Moechtest du es nochmal versuchen :) ? (y/n): "); //ZUSATZAUFGABE: Wiederholungsoption
         //scanf("%c"); 
         do {
-            test = scanf("%c", &response);
-            while ((getchar()) != '\n') {}
-        } while (test != 1);
+            test = scanf("%c", &response); //test wird dem wert von char zugewiesen, der auf die adresse von response liegt
+            while ((getchar()) != '\n') {} //Eingabepuffer löschen, nachdem man in die nächste Zeile geht
+        } while (test != 1); //test = 0 -> Wenn wir die Testung nocht durchführen ( condition 0, also char n eingeben) wird das Spiel beendet
         //response = toupper(response); //achtung bei scanf und toupper !
-    } while (response == 'y');
+    } while (response == 'y'); //Wenn der User den char für yes eingibt, wiederholt sich das Spiel und wird resettet
 
 
-    return 0;
+    return 0; //Ende der do-while-Schleife
 }
 
-void resetBoard(char board[3][3])
+void resetBoard(char board[3][3]) //ZUSATZAUFGABE: Spielfeld soll einfach nur zurückgesetzt werden, wenn das Spiel neu anfängt
 {
     for (int i = 0; i < 3; i++)
     {
@@ -108,7 +110,7 @@ void resetBoard(char board[3][3])
     }
     return board;
 }
-void printBoard(char board[3][3]) // Spielfeld wird gedruckt
+void printBoard(char board[3][3]) // Spielfeld wird gedruckt, Felder werden Arrays zugewiesen
 {
 
     printf(" %c | %c | %c ", board[0][0], board[0][1], board[0][2]);
@@ -120,11 +122,11 @@ void printBoard(char board[3][3]) // Spielfeld wird gedruckt
 }
 int checkFreeSpaces(char board[3][3]) //Freie Felder werden untersucht
 {
-    int freeSpaces = 9;
+    int freeSpaces = 9; //Fangen von der max. Anzahl der Felder an
 
-    for (int i = 0; i < 3; i++)
+    for (int i = 0; i < 3; i++) //x-Achse
     {
-        for (int j = 0; j < 3; j++)
+        for (int j = 0; j < 3; j++) //y-Achse
         {
             if (board[i][j] != ' ')
             {
@@ -178,34 +180,34 @@ void playerMove(char board[3][3]) //Wir übergebend er Funktion das Arrays
 void computerMove(char board[3][3])
 {
     //creates a seed based on current time
-    srand((unsigned int)time(NULL)); // casting == datentyp konvertieren von time_t (Rueckgabewert der funktion time) zu unsigned int
+    srand((unsigned int)time(NULL)); // casting == datentyp konvertieren von time_t (Rueckgabewert der funktion time) zu unsigned int //Spuckt eine Random freie Zahl aus 
     int x;
     int y;
     char* pboard = board;
 
-    if (checkFreeSpaces(pboard) > 0)
+    if (checkFreeSpaces(pboard) > 0) //wenn wir freie felder noch haben bzw die anzahl der felder größer als 0 ist
     {
         do
         {
-            x = rand() % 3;
-            y = rand() % 3;
-        } while (board[x][y] != ' ');
+            x = rand() % 3; //Freies Feld der Zeilen
+            y = rand() % 3; //Freies Feld der Spalten
+        } while (board[x][y] != ' '); //Während ein Feld frei ist
 
-        board[x][y] = 'X'; //Computer
+        board[x][y] = 'X'; //Computer setzt random in ein freies Feld seinSymbol X ein
     }
     else
     {
         printWinner(' '); //wenn alle felder belegt sind dann guckt die funktion wer gewonnen hat 
     }
 }
-char checkWinner(char board[3][3])
+char checkWinner(char board[3][3]) //Konditionen werden überprüft 
 {
     //Untersucht die Zeilen
     for (int i = 0; i < 3; i++)
     {
-        if (board[i][0] == board[i][1] && board[i][0] == board[i][2])
+        if (board[i][0] == board[i][1] && board[i][0] == board[i][2]) //Wennd er Wert bzw der char X oder O in diesem Feld vorhanden ist wird es mit den anderen überprüft, ob das selbe vorhanden ist
         {
-            return board[i][0];
+            return board[i][0]; //Das Symbol X oder O
         }
     }
     //Untersucht die Spalten
@@ -228,7 +230,7 @@ char checkWinner(char board[3][3])
 
     return ' ';
 }
-void printWinner(char winner)
+void printWinner(char winner) //Funktion hat kein Rückgabewert, soll nur nur Text ausgeben (unter Konditionen)
 {
     if (winner == 'O') //Player
     {
