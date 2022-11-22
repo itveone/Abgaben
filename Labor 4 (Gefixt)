@@ -68,14 +68,14 @@ int main()
 
             playerMove(pboard); //Funktion greift auf die Adresse von char durch Pointer 
             winner = checkWinner(pboard);
-            if (winner != ' ' || checkFreeSpaces(pboard) == 0)
+            if (winner != ' ' || checkFreeSpaces(pboard) == 0) //Wenn es keinen gewinner gibt dann wird die while wiederholt bzw neui ausgeführt 
             {
                 break;
             }
 
             computerMove(pboard);
             winner = checkWinner(pboard);
-            if (winner != ' ' || checkFreeSpaces(pboard) == 0)
+            if (winner != ' ' || checkFreeSpaces(pboard) == 0) //Zeile zuhause anschauen
             {
                 break;
             }
@@ -128,13 +128,13 @@ int checkFreeSpaces(char board[3][3]) //Freie Felder werden untersucht
         {
             if (board[i][j] != ' ')
             {
-                freeSpaces--;
+                freeSpaces--; //-> int freeSpaces werdn dadurch verändert bzw. der PC sxhaut wie viele freie Felder vorhanden sind zb. 5 ; dann int freeSpaces = 5
             }
         }
     }
-    return freeSpaces;
+    return freeSpaces; //int freeSpaces ist dr Rückgabewert
 }
-void playerMove(char board[3][3])
+void playerMove(char board[3][3]) //Wir übergebend er Funktion das Arrays 
 {
     int x;
     int y;
@@ -147,11 +147,13 @@ void playerMove(char board[3][3])
         printf("________________________________________________________________\n\n");
         printf("    SPIELANWEISUNGEN:\n");
         printf("    Gebe bitte einen Wert von 1 bis 3 ein fuer eine Zeile:");
+
         do {
-            testZeile = scanf("%d", &x);
-            while ((getchar()) != '\n') {}
-        } while (testZeile != 1);
+            testZeile = scanf("%d", &x); //Rückgabewertvon scanf wird im dem Int x gespeichert -- Testzeile erhält 1 (erfolgreich %d eingelesen) oder 0 (falscher Wert) 
+            while ((getchar()) != '\n') {} //Eingabepuffer löschen
+        } while (testZeile != 1); // überprüfen ob eingabe Sinn gemacht hat, if not true then shit loops again also do while 
         x--;
+
         printf("    Gebe bitte einen Wert von 1 bis 3 fuer eine Spalte:");
         do {
             testSpalte = scanf("%d", &y);
@@ -161,16 +163,16 @@ void playerMove(char board[3][3])
         y--;
         printf("________________________________________________________________\n\n");
 
-        if (board[x][y] != ' ') //Freies Feld ist nicht vorhanden bzw es ist besetzt
+        if (board[x][y] != ' ') //Freies Feld ist nicht vorhanden bzw es ist besetzt (if funktion checkt ob wir das felöd besetzen dürfen)
         {
             printf("Dieser Schritt ist leider ungültig !\n"); //Reaktion
         }
-        else
+        else //Wenn Platz in dem Feld ist, dann schmeißen wir ein O als User darin rein
         {
-            board[x][y] = 'O'; //Player
+            board[x][y] = 'O'; //Player 
             break;
         }
-    } while (board[x][y] != ' ');
+    } while (board[x][y] != ' '); //Wenn Bedingung nicht erfüllt wird dann wiederholt sich die do-while bis dieses es tut bzw solange wir keine gültige Eingabe eingaben, wiederholt sich die SChleife. Der eizige Weg raus ist das break bzw bis die Bedingung erfüllt wird.
 
 }
 void computerMove(char board[3][3])
@@ -193,7 +195,7 @@ void computerMove(char board[3][3])
     }
     else
     {
-        printWinner(' ');
+        printWinner(' '); //wenn alle felder belegt sind dann guckt die funktion wer gewonnen hat 
     }
 }
 char checkWinner(char board[3][3])
