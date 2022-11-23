@@ -8,11 +8,27 @@
 // 
 //__________________________________
 
+//NOTIZEN___________________________
+//
+// DO-WHILE-LOOPS: In programming, loops are used to repeat a block of code until a specified condition is met.
+//        The body of do...while loop is executed once. Only then, the testExpression is evaluated.(-> evaluated bedeutet ausgewertet)
+//        If testExpression is true, the body of the loop is executed again and testExpression is evaluated once more.
+//        This process goes on until testExpression becomes false.
+//        If testExpression is false, the loop ends.
+//
+//
+//WHILE-LOOPS: The while loop evaluates the testExpression inside the parentheses().
+//       If testExpression is true, statements inside the body of while loop are executed.Then, testExpression is evaluated again.
+//       The process goes on until testExpression is evaluated to false.
+//       If testExpression is false, the loop terminates(ends).
+//    
+//____________________________________
 
-//Defines (Standard)
+
+//DEFINES - MAKROS
 #define _CRT_SECURE_NO_WARNINGS
 
-//Bibliothek
+//BIBLIOTHEK
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
@@ -21,8 +37,8 @@
 
 
 
-//Funktionen deklarieren
-void resetBoard(char board[3][3]); //Passing the array to the function. The function can work with the 2-dimensional array 
+//FUNKTIONEN DEKLARIEREN
+void resetBoard(char board[3][3]); //Passing the array to the function. The function can work with the 2-dimensional arrays !
 void printBoard(char board[3][3]);
 int checkFreeSpaces(char board[3][3]);
 void playerMove(char board[3][3]);
@@ -30,14 +46,16 @@ void computerMove(char board[3][3]);
 char checkWinner(char board[3][3]);
 void printWinner(char);
 
-int main()
+int main() //HAUPTPROGRAMM
 {
+
     //VARIABLEN
     char winner = ' '; //Leerzeichen
     char response = ' '; //Leerzeichen
     int test; // Testung
     char board[3][3]; //Array
     char* pboard;  //Pointer auf Adresse von board
+
 
     //INTRO-TEXT:SPIELEINLEITUNG
     printf("___________________________________________________________________\n\n");
@@ -55,7 +73,8 @@ int main()
     printf("___________________________________________________________________\n\n");
     //Einleitung beendet
 
-    do //do-while: Wiederhole den Vorgang so oft, bis die Bedingung erfüllt wird. Durch break wird die while beendet. Condition wird am Ende geprüft
+
+    do //do-while: Wiederhole den Vorgang so oft, bis die Bedingung erfüllt wird. Durch break wird die while beendet. Condition wird am Ende von do-while geprüft.
     {
         winner = ' '; //Leerzeichen
         response = ' '; //Leerzeichen
@@ -101,15 +120,17 @@ int main()
 
 void resetBoard(char board[3][3]) //ZUSATZAUFGABE: Spielfeld soll einfach nur zurückgesetzt werden, wenn das Spiel neu anfängt
 {
-    for (int i = 0; i < 3; i++)
+    for (int i = 0; i < 3; i++) //x-Achse
     {
-        for (int j = 0; j < 3; j++)
+        for (int j = 0; j < 3; j++) //y-Achse
         {
-            board[i][j] = ' ';
+            board[i][j] = ' '; //Felder sind leer -> Kein Symbol, nur Leertaste 
         }
     }
-    return board;
+    return board; //Das Spielfeld wird als Rückgabewert definiert
 }
+
+
 void printBoard(char board[3][3]) // Spielfeld wird gedruckt, Felder werden Arrays zugewiesen
 {
 
@@ -120,6 +141,8 @@ void printBoard(char board[3][3]) // Spielfeld wird gedruckt, Felder werden Arra
     printf(" %c | %c | %c ", board[2][0], board[2][1], board[2][2]);
     printf("\n\n");
 }
+
+
 int checkFreeSpaces(char board[3][3]) //Freie Felder werden untersucht
 {
     int freeSpaces = 9; //Fangen von der max. Anzahl der Felder an
@@ -136,14 +159,17 @@ int checkFreeSpaces(char board[3][3]) //Freie Felder werden untersucht
     }
     return freeSpaces; //int freeSpaces ist dr Rückgabewert
 }
-void playerMove(char board[3][3]) //Wir übergebend er Funktion das Arrays 
+
+
+void playerMove(char board[3][3]) //Wir übergebend der Funktion das Arrays, Kein Rückgabewert, Nur Ausführung
 {
+    //VARIABLEN
     int x;
     int y;
     int testZeile;
     int testSpalte;
 
-    do
+    do //do-while: Wiederhole den Vorgang so oft, bis die Bedingung erfüllt wird. Durch break wird die while beendet. Condition wird am Ende von do-while geprüft.
     {
         // Anweisung für den Spieler (Ziel/Spalte)
         printf("________________________________________________________________\n\n");
@@ -154,14 +180,14 @@ void playerMove(char board[3][3]) //Wir übergebend er Funktion das Arrays
             testZeile = scanf("%d", &x); //Rückgabewertvon scanf wird im dem Int x gespeichert -- Testzeile erhält 1 (erfolgreich %d eingelesen) oder 0 (falscher Wert) 
             while ((getchar()) != '\n') {} //Eingabepuffer löschen
         } while (testZeile != 1); // überprüfen ob eingabe Sinn gemacht hat, if not true then shit loops again also do while 
-        x--;
+        x--; //if the condition of testSpalte isn´t true then the value of y is going to be decreased
 
         printf("    Gebe bitte einen Wert von 1 bis 3 fuer eine Spalte:");
         do {
-            testSpalte = scanf("%d", &y);
-            while ((getchar()) != '\n') {}
+            testSpalte = scanf("%d", &y);  //Die Zahl die wir in der Adresse von y abspeichern wird dem Wert von testSpalte zugeweisen
+            while ((getchar()) != '\n') {} //Einagbepuffer löschen
 
-        } while (testSpalte != 1);
+        } while (testSpalte != 1); //if the condition of testSpalte isn´t true then the value of y is going to be decreased because of the value of the arrays (starting from 0 -> 1)
         y--;
         printf("________________________________________________________________\n\n");
 
@@ -177,13 +203,15 @@ void playerMove(char board[3][3]) //Wir übergebend er Funktion das Arrays
     } while (board[x][y] != ' '); //Wenn Bedingung nicht erfüllt wird dann wiederholt sich die do-while bis dieses es tut bzw solange wir keine gültige Eingabe eingaben, wiederholt sich die SChleife. Der eizige Weg raus ist das break bzw bis die Bedingung erfüllt wird.
 
 }
+
+
 void computerMove(char board[3][3])
 {
     //creates a seed based on current time
     srand((unsigned int)time(NULL)); // casting == datentyp konvertieren von time_t (Rueckgabewert der funktion time) zu unsigned int //Spuckt eine Random freie Zahl aus 
     int x;
     int y;
-    char* pboard = board;
+    char* pboard = board; //Pointer
 
     if (checkFreeSpaces(pboard) > 0) //wenn wir freie felder noch haben bzw die anzahl der felder größer als 0 ist
     {
@@ -200,6 +228,8 @@ void computerMove(char board[3][3])
         printWinner(' '); //wenn alle felder belegt sind dann guckt die funktion wer gewonnen hat 
     }
 }
+
+
 char checkWinner(char board[3][3]) //Konditionen werden überprüft 
 {
     //Untersucht die Zeilen
@@ -230,6 +260,8 @@ char checkWinner(char board[3][3]) //Konditionen werden überprüft
 
     return ' ';
 }
+
+
 void printWinner(char winner) //Funktion hat kein Rückgabewert, soll nur nur Text ausgeben (unter Konditionen)
 {
     if (winner == 'O') //Player
