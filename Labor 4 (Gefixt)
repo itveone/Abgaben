@@ -79,7 +79,7 @@ int main() //HAUPTPROGRAMM
         winner = ' '; //Leerzeichen
         response = ' '; //Leerzeichen
         pboard = board; //Pointer von board zeigt auf das erste Element vom Array, pboard hat diesen Wert nun 
-        resetBoard(pboard); // Der Pointer pboard wird der Funktion resetboard übergeben (Pointer -> Referenzvariablen von Speicheradressen)
+        resetBoard(board); // Der Pointer pboard wird der Funktion resetboard übergeben (Pointer -> Referenzvariablen von Speicheradressen)
         //printf(pboard);
 
         //LET'S PLAY - GROBER ABLAUF
@@ -89,16 +89,10 @@ int main() //HAUPTPROGRAMM
 
             playerMove(pboard); //Funktion greift auf die Adresse von char durch Pointer -> Der USer spielt
             winner = checkWinner(pboard); //Es wird nach diesem Zug kontrolliert ob wir jetzt schon einen Gewinner haben
-            if (winner != ' ' || checkFreeSpaces(pboard) == 0) //Wenn es keinen Gewinner gibt dann wird die while wiederholt bzw neu ausgeführt 
+            if (winner == ' ' && checkFreeSpaces(pboard) != 0) //Wenn es keinen Gewinner gibt dann wird die while wiederholt bzw neu ausgeführt 
             {
-                break;
-            }
-
-            computerMove(pboard); //Der Computer setzt einen Zug
-            winner = checkWinner(pboard); //Nach diesem Zug wird kontrolliert ob wir einen Gewinner haben
-            if (winner != ' ' || checkFreeSpaces(pboard) == 0) //Zeile zuhause anschauen !! -> //Wenn es keinen Gewinner gibt dann wird die while wiederholt bzw neu ausgeführt 
-            {
-                break;
+                computerMove(pboard); //Der Computer setzt einen Zug
+                winner = checkWinner(pboard); //Nach diesem Zug wird kontrolliert ob wir einen Gewinner haben
             }
         }
 
@@ -127,7 +121,6 @@ void resetBoard(char board[3][3]) //ZUSATZAUFGABE: Spielfeld soll einfach nur zu
             board[i][j] = ' '; //Felder sind leer -> Kein Symbol, nur Leertaste 
         }
     }
-    return board; //Das Spielfeld wird als Rückgabewert definiert
 }
 
 
