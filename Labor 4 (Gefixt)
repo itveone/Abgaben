@@ -197,7 +197,7 @@ void playerMove(char board[3][3]) //Wir übergebend der Funktion das Arrays, Kei
         }
         else //Wenn Platz in dem Feld ist, dann schmeißen wir ein O als User darin rein
         {
-            board[x][y] = 'O'; //Player 
+            board[x][y] = 'X'; //Player 
             break;
         }
     } while (board[x][y] != ' '); //Wenn Bedingung nicht erfüllt wird dann wiederholt sich die do-while bis dieses es tut bzw solange wir keine gültige Eingabe eingaben, wiederholt sich die SChleife. Der eizige Weg raus ist das break bzw bis die Bedingung erfüllt wird.
@@ -208,7 +208,8 @@ void playerMove(char board[3][3]) //Wir übergebend der Funktion das Arrays, Kei
 void computerMove(char board[3][3])
 {
     //creates a seed based on current time
-    srand((unsigned int)time(NULL)); // casting == datentyp konvertieren von time_t (Rueckgabewert der funktion time) zu unsigned int //Spuckt eine Random freie Zahl aus 
+    //srand((unsigned int) time (NULL); -> Der Computer generiert seine Züge immer unterschiedlich pro Runde
+    srand(1); // casting == datentyp konvertieren von time_t (Rueckgabewert der funktion time) zu unsigned int //Spuckt eine Random freie Zahl aus //Statistik 
     int x;
     int y;
     char* pboard = board; //Pointer
@@ -221,7 +222,7 @@ void computerMove(char board[3][3])
             y = rand() % 3; //Freies Feld der Spalten
         } while (board[x][y] != ' '); //Während ein Feld frei ist
 
-        board[x][y] = 'X'; //Computer setzt random in ein freies Feld seinSymbol X ein
+        board[x][y] = 'O'; //Computer setzt random in ein freies Feld seinSymbol X ein
     }
     else
     {
@@ -264,11 +265,11 @@ char checkWinner(char board[3][3]) //Konditionen werden überprüft
 
 void printWinner(char winner) //Funktion hat kein Rückgabewert, soll nur nur Text ausgeben (unter Konditionen)
 {
-    if (winner == 'O') //Player
+    if (winner == 'X') //Player
     {
         printf("Du hast gewonnen :)");
     }
-    else if (winner == 'X') //Computer
+    else if (winner == 'O') //Computer
     {
         printf("Du hast leider verloren :(");
     }
