@@ -20,34 +20,43 @@ int main
   printf ("___________________________________________");
   
   //VARIABLEN DER STÄDTE  (HOCHSCHIEBEN)
-  int Berlin = 1;
-  int Kassel = 2;
-  int Stuttgart = 3;
-  int Freiburg = 4;
-  int Hamburg = 5;
+  //int Berlin = 1;
+  //int Kassel = 2;
+  //int Stuttgart = 3;
+  //int Freiburg = 4;
+  //int Hamburg = 5;
+  
+  //VARIABLEN (RÜCKGABEWERTE)
+  int stadtwert = 0;
+  int ausrichtung = 0;
+  float spitzenwert = 0;
+  
+  int ort = 0;
+  int anlage = 0;
+  float peak = 0;
+  
   
   //ERSTE FRAGE
   printf("Bitte waehlen Sie eine Stadt aus (1 = Berlin, 2 = Kassel, 3 = Stuttgart, 4 = Freiburg 5 = Hamburg) : ");
-  scanf(%d, &Berlin, &Kassel, &Stuttgart, &Freiburg, &Hamburg);
+  ort = scanf(%d, &stadtwert);
   while ((getchar() != '\n') {}
   printf ("\n"); 
   
   //VARIABLEN DER AUSRICHTUNGEN (HOCHSCHIEBEN)
-  int horizontal = 1;
-  int sued30 = 2;
-  int sued45 = 3;
-  int sued60 = 4;
+  //int horizontal = 1;
+  //int sued30 = 2;
+  //int sued45 = 3;
+  //int sued60 = 4;
 
   //ZWEITE FRAGE
   printf("Wie wird die PV-Anlage ausgerichtet ? ( 1 = Horizontal, 2 = Sued 30°, 3 = Sued 45°, 4 = Sued 60°) :");
-  scanf(%d, &horizontal, &sued30, &sued45, &sued60);
+  anlage = scanf(%d, &ausrichtung);
   while ((getchar() != '\n') {}
   printf ("\n"); 
   
   //DRITTE FRAGE
   printf("Wie gross ist die Spitzenleistung (kWp) ( 1 - 30, alter Wert: 10):");
-  
-  
+  peak = scanf("&f, &spitzenwert");
   while ((getchar() != '\n') {}
   printf ("\n"); 
   
