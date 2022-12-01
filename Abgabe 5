@@ -1,14 +1,27 @@
+//Praktikumsaufgabe: 5
+//Aufgabe: PV-Rechner
+//Author: Mariam Ahmadi
+//Abgabe: Erstversion
+//Prüfer: Prof. Eger
+
+
+//DEFINE/MAKROS
+#define _CRT_SECURE_NO_WARNINGS
+
 //INCLUDES/BIBLIOTHEKEN
 #include <stdio.h>
+#include <math.h>
+
+void tageswert_hamburg(float* kwh_hamburg, float* tage, float* durchschnitt_monat_hh);
 
 //HAUPTPROGRAMM / PV-RECHNER
-int main ()
+int main()
 {
 
 	//INTRO
 	printf("___________________________________________\n\n");
-	printf("       EINFACHER PV-RECHNER\n");
-	printf("___________________________________________\n\n");
+	printf("       * EINFACHER PV-RECHNER *\n");
+	printf("___________________________________________\n\n\n");
 
 	//VARIABLEN DER STÄDTE  (HOCHSCHIEBEN)
 	//int Berlin = 1;
@@ -20,16 +33,16 @@ int main ()
 	//VARIABLEN (RÜCKGABEWERTE)
 	int stadtwert = 0;
 	int ausrichtung = 0;
-	float spitzenwert = 0;
+	int spitzenwert = 0; //TUTORIUM: muss eig float sein aber iwie wird mir ne fehlermeldung anzeigt
 
 	int ort = 0;
 	int anlage = 0;
-	float peak = 0;
+	int peak = 0; //TUTORIUM: muss eig float sein aber iwie wird mir ne fehlermeldung anzeigt
 
 
 	//ERSTE FRAGE
-	printf("Bitte waehlen Sie eine Stadt aus");
-	print("(1 = Berlin, 2 = Kassel, 3 = Stuttgart, 4 = Freiburg 5 = Hamburg): ");
+	printf("Bitte waehlen Sie eine Stadt aus\n");
+	printf("(1 = Berlin, 2 = Kassel, 3 = Stuttgart, 4 = Freiburg, 5 = Hamburg): ");
 	ort = scanf("%d", &stadtwert);
 	while ((getchar()) != '\n') {}
 	printf("\n");
@@ -41,18 +54,70 @@ int main ()
 	//int sued60 = 4;
 
 	//ZWEITE FRAGE
-	printf("Wie wird die PV-Anlage ausgerichtet ?");
-	printf("(1 = Horizontal, 2 = Sued 30°, 3 = Sued 45°, 4 = Sued 60°):");
+	printf("Wie wird die PV-Anlage ausgerichtet ?\n");
+	printf("(1 = Horizontal, 2 = Sued 30 Grad, 3 = Sued 45 Grad, 4 = Sued 60 Grad): ");
 	anlage = scanf("%d", &ausrichtung);
 	while ((getchar()) != '\n') {}
 	printf("\n");
 
 	//DRITTE FRAGE
-	printf("Wie gross ist die Spitzenleistung (kWp)");
+	printf("Wie gross ist die Spitzenleistung (kWp)\n");
 	printf("( 1 - 30, alter Wert: 10): ");
-	peak = scanf("%f", &spitzenwert);
+	peak = scanf("%d", &spitzenwert);
 	while ((getchar()) != '\n') {}
+
+	//-> INTRO PV ERTRAG
 	printf("\n");
+	printf("___________________________________________\n\n");
+	printf("       * BERECHNETER PV-ERTRAG *\n");
+	printf("___________________________________________\n\n\n");
+
+	if (ort == 1)
+	{
+
+
+	}
+	else if (ort == 2)
+	{
+
+	}
+
+	//Globalstrahlung auf horizontale Flächen -> Erste Tabelle
+	printf(" Jan Feb Mae Apr Mai Jun Jul Aug Sep Okt Nov Dez \n");
+	int i;
+	float kwh_hamburg[12] = { 0.52 , 1.13 , 2.23 , 3.55 , 4.67 , 5.44 , 4.82 , 4.34 , 2.79 , 1.49 , 0.67 , 0.4 };
+	float tage[12] = { 31 , 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+	float durchschnitt_monat_hh[12] = { 0,0,0,0,0,0,0,0,0,0,0,0};
+	float jahreswert = 0;
+	tageswert_hamburg(&kwh_hamburg, &tage, &durchschnitt_monat_hh);
+
+	for (int i = 0; i < 12; i++)
+	{
+		printf("%.2f ", durchschnitt_monat_hh[i]);
+	}
+
+}
+
+void tageswert_hamburg(float* kwh_hamburg, float* tage, float* durchschnitt_monat_hh)
+{
+	int i;
+
+	for (i = 0; i < 12; i++)
+	{
+		durchschnitt_monat_hh[i] = kwh_hamburg[i] * tage[i];
+	}
+}
+
+void jahreswert_hamburg_horizontal(float* durchschnitt_monat_hh, float* jahreswert)
+{
+	for (int i = 0; i < 12; i++)
+	{
+		*jahreswert = *jahreswert + durchschnitt_monat_hh[i];
+	}
+	
+
+void winkel_wert()
+{
 
 
 }
