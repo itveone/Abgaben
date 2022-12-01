@@ -1,0 +1,37 @@
+//Programmierpraktikum: Abgabe 5
+//Thema: PV-Rechner
+//Author: Mariam Ahmadi
+//Datum: 01.12.22
+//Abgabe-Version: Erstabgabe
+
+//DEFINES/MAKROS
+#define _SECURE_NO_WARNINGS_
+
+//INCLUDES/BIBLIOTHEKEN
+#include <stdio.h>
+
+//HAUPTPROGRAMM / PV-RECHNER
+int main 
+{
+
+  //INTRO
+  printf ("___________________________________________");
+  printf ("       EINFACHER PV-RECHNER");
+  printf ("___________________________________________");
+  
+  //VARIABLEN DER STÄDTE 
+  int Berlin = 1;
+  int Kassel = 2;
+  int Stuttgart = 3;
+  int Freiburg = 4;
+  int Hamburg = 5;
+  
+  //ERSTE FRAGE
+  printf("Bitte wählen Sie eine Stadt aus (1 = Berlin, 2 = Kassel, 3 = Stuttgart, 4 = Freiburg 5 = Hamburg) : ");
+  scanf(%d, &Berlin, &Kassel, &Stuttgart, &Freiburg, &Hamburg);
+  while ((getchar() != '\n') {}
+  
+  
+  
+
+}
