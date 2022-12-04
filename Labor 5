@@ -1,0 +1,177 @@
+//
+//_________________________________
+//                                 
+//  Praktikumsaufgabe: 5
+//  Aufgabe: PV-Rechner
+//  Author: Mariam Ahmadi
+//  Abgabe: Erstversion
+//  Prüfer: Prof. Eger
+// 
+//_________________________________
+//
+
+
+//DEFINE/MAKROS
+#define _CRT_SECURE_NO_WARNINGS
+
+//Makros noch
+
+//Bibs
+
+//INCLUDES/BIBLIOTHEKEN
+#include <stdio.h>
+#include <math.h> // Zum Aufrunden benötigen wir den Befehl "lround"
+
+
+int getint(char text[], int grenzwert);
+float getfloat(char text[], float grenzwert);
+void formel_auswertung(int stadt_welche, int ausrichtung_welche, float spitzenleistung_welche);
+void printfinale(float ergebnis[]);
+
+
+//HAUPTPROGRAMM / PV-RECHNER
+int main(void)
+{
+
+    //INTRO
+    printf("    ___________________________________________\n\n");
+    printf("         * EINFACHER PV-RECHNER *\n");
+    printf("    ___________________________________________\n\n\n");
+
+
+
+
+    //integer zum Abspeichern der Eingabewerte
+    int stadt;
+    int winkel;
+    float spitzenleistung_welche;
+
+
+    //Abfragen zur Örtlichkeit, der Ausrichtung & der Peak-Leistung
+    stadt = getint("    BITTE WAEHLEN SIE EINEN ORT AUS\n   (1 = Berlin, 2 = Kassel, 3 = Stuttgart, 4 = Freiburg, 5 = Hamburg): ", 5);
+    printf("\n");
+
+    winkel = getint("   WIE WIRD IHRE PV-ANLAGE AUSGERICHTET ? \n    (1 = Horizontal, 2 = -30 Grad Südlich, 3 = -45 Grad Suedlich, 4 = -60 Grad Suedlich: ", 4);
+    printf("\n");
+
+    spitzenleistung_welche = getfloat("     Wie gross ist die Spitzenleistung (kWp)\n   [Werteberich zwischen 1 und 30. Alter Wert: 10] ", 30);
+    printf("\n");
+
+    //Funktion zur Berechnung
+    formel_auswertung(stadt, winkel, spitzenleistung_welche);
+
+    return 0;
+}
+
+//get int evtl zusammenlegen
+int getint(char text[], int grenzwert)
+{
+    int retval;
+    int ergebnis;          //für den Flex
+    int true_condition = 0;
+
+    while (true_condition == 0)
+    {
+        printf("%s", text);
+        retval = scanf("%d", &ergebnis);
+        if (retval != 1) printf("FALSCH!NOCHMAL!\n");
+        else if (ergebnis < 1 || ergebnis > grenzwert) printf("Eingabe war ausserhalb des Bereichs!");
+        else true_condition++;
+
+        while (getchar() != '\n') {}    //Input-buffer leeren
+    }
+
+    return ergebnis;
+}
+
+//getint vllt mit getfloat zusammenlegen mit infos aus VL9
+float getfloat(char text[], float grenzwert)
+{
+    int retval;
+    float ergebnis2;        //für den Flex
+    int korrekt = 0;
+
+    while (korrekt == 0)
+    {
+        printf("%s", text);
+        retval = scanf("%f", &ergebnis2);
+        if (retval != 1) printf("FALSCH!NOCHMAL!\n");
+        else if (ergebnis2 < 1 || ergebnis2 > grenzwert) printf("Eingabe war ausserhalb des Bereichs!");
+        else korrekt++;
+
+        while (getchar() != '\n') {}    //Input-buffer leeren
+    }
+
+    return ergebnis2;
+}
+
+//Werte und Rechnung
+void formel_auswertung(int stadt_welche, int ausrichtung_welche, float spitzenleistung_welche)
+{
+    float ergebnis[12];     //Abspeichern der errechneten Werte im Array
+    int month_days[12] = { 31,28,31,30,31,30,31,31,30,31,30,31 };    //wichtig für hamburgs Mittelwerte
+    float HH_mittelwert[12] = { 0.52f,1.13f,2.23f,3.55f,4.67f,5.44f,4.82f,4.34f,2.79f,1.49f,0.67f,0.40f };
+
+    //zwei-dimensionales Array, 1. Dim.: welche Stadt; 2. Dim.: spezifische Werte
+    float stadt[5][12] = {
+        {19,33,75,128,160,166,158,134,94,51,26,15},     //Berlin
+        {20,34,77,123,150,162,154,132,90,52,25,16},     //Kassel
+        {29,45,85,130,153,174,164,140,99,62,36,24},     //Stuttgart
+        {29,45,84,129,153,172,166,141,104,63,38,24} };  //Freiburg
+    //{Werte von Hamburg werden noch ausgerechnet im nächsten Schritt}  //Hamburg
+
+//Ausrichtungs spezifische Werte im Array
+    float ausrichtung[4][12] = {
+        {1,1,1,1,1,1,1,1,1,1,1,1},
+        {1.44f,1.40f,1.17f,1.08f,1.00f,0.96f,0.97f,1.03f,1.17f,1.30f,1.47f,1.42f},      //30°
+        {1.57f,1.50f,1.19f,1.05f,0.94f,0.90f,0.91f,1.00f,1.18f,1.37f,1.61f,1.55f},      //45°
+        {1.63f,1.54f,1.15f,0.98f,0.85f,0.81f,0.83f,0.92f,1.14f,1.38f,1.68f,1.61f} };    //60°
+
+    //Mittelwerte für Hamburg
+    //stadt[4][12] =:
+    if (stadt_welche == 5)
+    {
+        for (int i = 0; i < 12; i++)
+        {
+            //Berechnung des Mittelwerts
+            HH_mittelwert[i] = HH_mittelwert[i] * month_days[i];
+
+            //Abspeichern des Mittelwerts in stadt array
+            stadt[4][i] = HH_mittelwert[i];
+        }
+    }
+
+    //Magic formel von Herrn Haase
+    for (int i = 0; i < 12; i++)
+    {
+        //Abspeichern im Array:     Ergebnis = Stadtfaktor * Ausrichtungsfaktor * Leistung
+        ergebnis[i] = stadt[stadt_welche - 1][i] * ausrichtung[ausrichtung_welche - 1][i] * spitzenleistung_welche;
+    }
+
+    //Funktion zum Druck des Ergebniss
+    printfinale(ergebnis);
+}
+
+//printf that ergebnis wert
+void printfinale(float ergebnis[])
+{
+    //printfs zur BEnutzerführung
+    printf("\nBerechneter PV-Ertrag:\n");
+    printf("  Jan |  Feb |  Mar |  Apr |  Mai |  Jun |  Jul |  Aug |  Sep |  Okt |  Nov |  Dez      | | Gesamt [kWh]\n");
+
+    //berechnete Werte aus Ergebnisarray printfen
+    for (int i = 0; i < 12; i++)
+    {
+        printf(" %4.d |", lround(ergebnis[i]));
+    }
+
+    //gesamt [kWh]-Zahl errechnen
+    for (int i = 1; i < 12; i++)
+    {
+        //Monat+Monat davor bis man durch ist
+        ergebnis[i] += ergebnis[i - 1];
+    }
+
+    //printf des Gesamtwert im Jahr
+    printf(" | %d", lround(ergebnis[11]));
+}
