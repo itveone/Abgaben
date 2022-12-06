@@ -14,17 +14,14 @@
 //DEFINE/MAKROS
 #define _CRT_SECURE_NO_WARNINGS
 
-//Makros noch
-
-//Bibs
 
 //INCLUDES/BIBLIOTHEKEN
 #include <stdio.h>
 #include <math.h> // Zum Aufrunden benötigen wir den Befehl "lround"
 
-
-int getint(char text[], int grenzwert);
-float getfloat(char text[], float grenzwert);
+//FUNKTIONEN 
+int getint(char text[], int grenzwert); //anschauen !
+float getfloat(char text[], float grenzwert); //anschauen !
 void formel_auswertung(int stadt_welche, int ausrichtung_welche, float spitzenleistung_welche);
 void printfinale(float ergebnis[]);
 
@@ -37,7 +34,6 @@ int main(void)
     printf("    ___________________________________________\n\n");
     printf("         * EINFACHER PV-RECHNER *\n");
     printf("    ___________________________________________\n\n\n");
-
 
 
 
@@ -56,18 +52,22 @@ int main(void)
 
     spitzenleistung_welche = getfloat("     Wie gross ist die Spitzenleistung (kWp)\n   [Werteberich zwischen 1 und 30. Alter Wert: 10] ", 30);
     printf("\n");
+    
 
-    //Funktion zur Berechnung
+    //FUNKTION DER BERECHNUNG (WERTE GEGEBEN)
     formel_auswertung(stadt, winkel, spitzenleistung_welche);
+    
+    
 
     return 0;
 }
+
 
 //get int evtl zusammenlegen
 int getint(char text[], int grenzwert)
 {
     int retval;
-    int ergebnis;          //für den Flex
+    int ergebnis;          
     int true_condition = 0;
 
     while (true_condition == 0)
@@ -88,24 +88,24 @@ int getint(char text[], int grenzwert)
 float getfloat(char text[], float grenzwert)
 {
     int retval;
-    float ergebnis2;        //für den Flex
+    float ergebnis2;        
     int korrekt = 0;
 
     while (korrekt == 0)
     {
         printf("%s", text);
         retval = scanf("%f", &ergebnis2);
-        if (retval != 1) printf("FALSCH!NOCHMAL!\n");
-        else if (ergebnis2 < 1 || ergebnis2 > grenzwert) printf("Eingabe war ausserhalb des Bereichs!");
+        if (retval != 1) printf(" Üngültige Eingabe !\n");
+        else if (ergebnis2 < 1 || ergebnis2 > grenzwert) printf("Eingabe auserhalt des Wertebereichs!");
         else korrekt++;
 
         while (getchar() != '\n') {}    //Input-buffer leeren
     }
 
-    return ergebnis2;
+    return ergebnis2; //Returnvalue ist ergebnis2 
 }
 
-//Werte und Rechnung
+//WERTE UND RECHNUNG
 void formel_auswertung(int stadt_welche, int ausrichtung_welche, float spitzenleistung_welche)
 {
     float ergebnis[12];     //Abspeichern der errechneten Werte im Array
@@ -118,16 +118,17 @@ void formel_auswertung(int stadt_welche, int ausrichtung_welche, float spitzenle
         {20,34,77,123,150,162,154,132,90,52,25,16},     //Kassel
         {29,45,85,130,153,174,164,140,99,62,36,24},     //Stuttgart
         {29,45,84,129,153,172,166,141,104,63,38,24} };  //Freiburg
-    //{Werte von Hamburg werden noch ausgerechnet im nächsten Schritt}  //Hamburg
+    //(Werte von Hamburg werden noch ausgerechnet im nächsten Schritt)  //Hamburg
 
 //Ausrichtungs spezifische Werte im Array
-    float ausrichtung[4][12] = {
+    float ausrichtung[4][12] = 
+    {
         {1,1,1,1,1,1,1,1,1,1,1,1},
         {1.44f,1.40f,1.17f,1.08f,1.00f,0.96f,0.97f,1.03f,1.17f,1.30f,1.47f,1.42f},      //30°
         {1.57f,1.50f,1.19f,1.05f,0.94f,0.90f,0.91f,1.00f,1.18f,1.37f,1.61f,1.55f},      //45°
         {1.63f,1.54f,1.15f,0.98f,0.85f,0.81f,0.83f,0.92f,1.14f,1.38f,1.68f,1.61f} };    //60°
 
-    //Mittelwerte für Hamburg
+    //MITTELWERTE FÜR HH
     //stadt[4][12] =:
     if (stadt_welche == 5)
     {
@@ -141,7 +142,7 @@ void formel_auswertung(int stadt_welche, int ausrichtung_welche, float spitzenle
         }
     }
 
-    //Magic formel von Herrn Haase
+    //SCHLEIFENDURCHLAUF (Array)
     for (int i = 0; i < 12; i++)
     {
         //Abspeichern im Array:     Ergebnis = Stadtfaktor * Ausrichtungsfaktor * Leistung
@@ -150,22 +151,23 @@ void formel_auswertung(int stadt_welche, int ausrichtung_welche, float spitzenle
 
     //Funktion zum Druck des Ergebniss
     printfinale(ergebnis);
-}
+    
+    }
 
 //printf that ergebnis wert
 void printfinale(float ergebnis[])
 {
-    //printfs zur BEnutzerführung
-    printf("\nBerechneter PV-Ertrag:\n");
+    //printfs zur Benutzerführung
+    printf("\n Berechneter PV-Ertrag: \n");
     printf("  Jan |  Feb |  Mar |  Apr |  Mai |  Jun |  Jul |  Aug |  Sep |  Okt |  Nov |  Dez      | | Gesamt [kWh]\n");
 
-    //berechnete Werte aus Ergebnisarray printfen
+    //Bereechnete Werte aus Ergebnisarray printfen
     for (int i = 0; i < 12; i++)
     {
         printf(" %4.d |", lround(ergebnis[i]));
     }
 
-    //gesamt [kWh]-Zahl errechnen
+    //gesamt [kWh]-Zahl errechnen GESAMTE 
     for (int i = 1; i < 12; i++)
     {
         //Monat+Monat davor bis man durch ist
