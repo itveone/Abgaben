@@ -1,4 +1,4 @@
-//
+/
 //_________________________________
 //                                 
 //  Praktikumsaufgabe: 5
@@ -37,10 +37,10 @@ int main(void)
 
 
 
-    //integer zum Abspeichern der Eingabewerte
-    int stadt;
-    int winkel;
-    float spitzenleistung_welche;
+    //VARIABLEN
+    int stadt; // Variable für den Ort
+    int winkel; // Variable für den Einstarhlungswinkel
+    float usereingabe_peakleistung; //Variable für den Eingabewert der Spitzenleistung 
 
 
     //Abfragen zur Örtlichkeit, der Ausrichtung & der Peak-Leistung
@@ -50,33 +50,35 @@ int main(void)
     winkel = getint("   WIE WIRD IHRE PV-ANLAGE AUSGERICHTET ? \n    (1 = Horizontal, 2 = -30 Grad Südlich, 3 = -45 Grad Suedlich, 4 = -60 Grad Suedlich: ", 4);
     printf("\n");
 
-    spitzenleistung_welche = getfloat("     Wie gross ist die Spitzenleistung (kWp)\n   [Werteberich zwischen 1 und 30. Alter Wert: 10] ", 30);
-    printf("\n");
-    
+    usereingabe_peakleistung = getfloat("     Wie gross ist die Spitzenleistung (kWp)\n   [Werteberich zwischen 1 und 30. Alter Wert: 10] ", 30);
+    printf("__________________________________________________________________________________________\n\n\n");
+
+
 
     //FUNKTION DER BERECHNUNG (WERTE GEGEBEN)
-    formel_auswertung(stadt, winkel, spitzenleistung_welche);
-    
-    
+    formel_auswertung(stadt, winkel, usereingabe_peakleistung); //Wir geben der Funktion die Werte zu
 
-    return 0;
+
+
+    return 0; //Rückgabewert false -> Programm wird geschlossen
 }
 
 
-//get int evtl zusammenlegen
-int getint(char text[], int grenzwert)
-{
-    int retval;
-    int ergebnis;          
-    int true_condition = 0;
 
-    while (true_condition == 0)
+int getint(char text[], int grenzwert) //-> Aus Vorlesung , nochmal nachschauen
+{
+    int retval; // Integar für Rückgabewert
+    int ergebnis; // Integar für das Ergebnis
+    int true_condition = 0; // Integar für eine richtige Bedingung, der Wert "0" wird dme Int gegeben
+
+    while (true_condition == 0) //Während die wahre Kondition nicht eintrettet, läuft die Schleife (bis die Bedingung erfüllt wird)
     {
-        printf("%s", text);
-        retval = scanf("%d", &ergebnis);
-        if (retval != 1) printf("FALSCH!NOCHMAL!\n");
-        else if (ergebnis < 1 || ergebnis > grenzwert) printf("Eingabe war ausserhalb des Bereichs!");
-        else true_condition++;
+        printf("%s", text); // String-Platzhalter für die printf-Funktion, Text soll geprinted werden
+        retval = scanf("%d", &ergebnis); //scanf : Platzhalter für einen Integar, Adresse von Ergebnis, Variable retval bekommt den Wert von scanf bzw. was eingelesen wird
+        if (retval != 1) printf("Dies ist eine ungültige Angabe !\n"); //Wenn die Eingabe falsch ist, wird eine Warnung erscheinen
+        else if (ergebnis < 1 || ergebnis > grenzwert) printf("Die Eingabe war ausserhalb des Bereichs!"); //Oder wenn die Usereingabe einen Wert unter 1 "oder"
+                                                                                                      //die Eingabe größer als der max. Wert ist bzw den Grenzwert dann...
+        else true_condition++; //Wenn die Bedingung nicht erfüllt wird, wird die 
 
         while (getchar() != '\n') {}    //Input-buffer leeren
     }
@@ -88,7 +90,7 @@ int getint(char text[], int grenzwert)
 float getfloat(char text[], float grenzwert)
 {
     int retval;
-    float ergebnis2;        
+    float ergebnis2;
     int korrekt = 0;
 
     while (korrekt == 0)
@@ -121,7 +123,7 @@ void formel_auswertung(int stadt_welche, int ausrichtung_welche, float spitzenle
     //(Werte von Hamburg werden noch ausgerechnet im nächsten Schritt)  //Hamburg
 
 //Ausrichtungs spezifische Werte im Array
-    float ausrichtung[4][12] = 
+    float ausrichtung[4][12] =
     {
         {1,1,1,1,1,1,1,1,1,1,1,1},
         {1.44f,1.40f,1.17f,1.08f,1.00f,0.96f,0.97f,1.03f,1.17f,1.30f,1.47f,1.42f},      //30°
@@ -151,14 +153,14 @@ void formel_auswertung(int stadt_welche, int ausrichtung_welche, float spitzenle
 
     //Funktion zum Druck des Ergebniss
     printfinale(ergebnis);
-    
-    }
+
+}
 
 //printf that ergebnis wert
 void printfinale(float ergebnis[])
 {
     //printfs zur Benutzerführung
-    printf("\n Berechneter PV-Ertrag: \n");
+    printf("\n Berechneter PV-Ertrag: \n\n");
     printf("  Jan |  Feb |  Mar |  Apr |  Mai |  Jun |  Jul |  Aug |  Sep |  Okt |  Nov |  Dez      | | Gesamt [kWh]\n");
 
     //Bereechnete Werte aus Ergebnisarray printfen
