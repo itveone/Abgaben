@@ -1,4 +1,3 @@
-/
 //_________________________________
 //                                 
 //  Praktikumsaufgabe: 5
@@ -20,9 +19,9 @@
 #include <math.h> // Zum Aufrunden benötigen wir den Befehl "lround"
 
 //FUNKTIONEN 
-int getint(char text[], int grenzwert); //anschauen !
-float getfloat(char text[], float grenzwert); //anschauen !
-void formel_auswertung(int stadt_welche, int ausrichtung_welche, float spitzenleistung_welche);
+int getint(char text[], int grenzwert); //VL!
+float getfloat(char text[], float grenzwert); //VL !
+void formel_auswertung(int city, int angle, float peakpower);
 void printfinale(float ergebnis[]);
 
 
@@ -47,7 +46,7 @@ int main(void)
     stadt = getint("    BITTE WAEHLEN SIE EINEN ORT AUS\n   (1 = Berlin, 2 = Kassel, 3 = Stuttgart, 4 = Freiburg, 5 = Hamburg): ", 5);
     printf("\n");
 
-    winkel = getint("   WIE WIRD IHRE PV-ANLAGE AUSGERICHTET ? \n    (1 = Horizontal, 2 = -30 Grad Südlich, 3 = -45 Grad Suedlich, 4 = -60 Grad Suedlich: ", 4);
+    winkel = getint("   WIE WIRD IHRE PV-ANLAGE AUSGERICHTET ? \n    (1 = Horizontal, 2 = -30 Grad Sudlich, 3 = -45 Grad Suedlich, 4 = -60 Grad Suedlich: ", 4);
     printf("\n");
 
     usereingabe_peakleistung = getfloat("     Wie gross ist die Spitzenleistung (kWp)\n   [Werteberich zwischen 1 und 30. Alter Wert: 10] ", 30);
@@ -77,7 +76,7 @@ int getint(char text[], int grenzwert) //-> Aus Vorlesung , nochmal nachschauen
         retval = scanf("%d", &ergebnis); //scanf : Platzhalter für einen Integar, Adresse von Ergebnis, Variable retval bekommt den Wert von scanf bzw. was eingelesen wird
         if (retval != 1) printf("Dies ist eine ungültige Angabe !\n"); //Wenn die Eingabe falsch ist, wird eine Warnung erscheinen
         else if (ergebnis < 1 || ergebnis > grenzwert) printf("Die Eingabe war ausserhalb des Bereichs!"); //Oder wenn die Usereingabe einen Wert unter 1 "oder"
-                                                                                                      //die Eingabe größer als der max. Wert ist bzw den Grenzwert dann...
+        //die Eingabe größer als der max. Wert ist bzw den Grenzwert dann...
         else true_condition++; //Wenn die Bedingung nicht erfüllt wird, wird die 
 
         while (getchar() != '\n') {}    //Input-buffer leeren
@@ -108,7 +107,7 @@ float getfloat(char text[], float grenzwert)
 }
 
 //WERTE UND RECHNUNG
-void formel_auswertung(int stadt_welche, int ausrichtung_welche, float spitzenleistung_welche)
+void formel_auswertung(int city, int angle, float peakpower)
 {
     float ergebnis[12];     //Abspeichern der errechneten Werte im Array
     int month_days[12] = { 31,28,31,30,31,30,31,31,30,31,30,31 };    //wichtig für hamburgs Mittelwerte
@@ -132,7 +131,7 @@ void formel_auswertung(int stadt_welche, int ausrichtung_welche, float spitzenle
 
     //MITTELWERTE FÜR HH
     //stadt[4][12] =:
-    if (stadt_welche == 5)
+    if (city == 5)
     {
         for (int i = 0; i < 12; i++)
         {
@@ -148,7 +147,7 @@ void formel_auswertung(int stadt_welche, int ausrichtung_welche, float spitzenle
     for (int i = 0; i < 12; i++)
     {
         //Abspeichern im Array:     Ergebnis = Stadtfaktor * Ausrichtungsfaktor * Leistung
-        ergebnis[i] = stadt[stadt_welche - 1][i] * ausrichtung[ausrichtung_welche - 1][i] * spitzenleistung_welche;
+        ergebnis[i] = stadt[city - 1][i] * ausrichtung[angle - 1][i] * peakpower;
     }
 
     //Funktion zum Druck des Ergebniss
