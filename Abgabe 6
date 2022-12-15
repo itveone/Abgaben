@@ -8,3 +8,81 @@
 // Author : Mariam Ahmadi (S1, REE)
 // 
 //_______________________________________________________
+
+//Standardeinstellung : Anti-Warnung von scanf
+#define _CRT_SECURE_NO_WARNINGS 
+
+
+//Auswertung der Kommandozeilenparameter (III)
+#include <stdio.h>
+
+
+//Auswertung der Kommandozeilenparameter (III) -> Vorlersun
+void main(int argc, char* argv[])
+{
+
+	//INTRO - Aufgabe 1
+	printf("_______________________________________________________\n\n");
+	printf("	KOMMANDOZEILENPARAMETER, DATEIEN & ZEIGER\n");
+	printf("_______________________________________________________\n\n");
+
+	//Aufgabe 1: Parameter bestimmen
+	int i;
+	
+	for (i = 0; i < argc; i++)
+	{
+		printf("%d. parameter: \"%s\" \n", i, argv[i]); //   [ \" ] -> Formatierung der Gänsefüßchen für die Parameter
+		printf("\n");
+	}
+
+
+
+	//INTRO - Aufgabe 2
+	printf("_______________________________________________________\n\n");
+	printf("					Das Alphabet\n");
+	printf("_______________________________________________________\n\n");
+
+	//Aufgabe 2: Verschlüsselung
+	char c[27];
+	c[26] = 0; //26. Element wird auf Null gesetzt (Nochmal nachfragen !)
+	for (int i = 0; i < 26; i++)
+	{
+		c[i] = 'A' + i;
+		printf(" %c", c[i]);
+	}
+	printf("\n\n"); //Abstand
+
+	//FILES
+	
+	FILE* ptr;
+	char ch;
+
+	// Opening file in reading mode
+	ptr = fopen("start.txt", "r");
+
+	if (NULL == ptr) {
+		printf("file can't be opened \n");
+	}
+
+	printf("_______________________________________________________\n\n");
+	printf("					Ursprungsdatei\n");
+	printf("_______________________________________________________\n\n");
+
+	//@geekforgeeks.org -> https://www.geeksforgeeks.org/c-program-to-read-contents-of-whole-file/
+	// Printing what is written in file
+	// character by character using loop.
+	do {
+		ch = fgetc(ptr);
+		printf("%c", ch);
+
+		// Checking if character is not EOF.
+		// If it is EOF stop eading. 
+	} while (ch != EOF);
+	printf("\n");
+
+	// Closing the file
+	fclose(ptr);
+	return 0;
+}
+
+
