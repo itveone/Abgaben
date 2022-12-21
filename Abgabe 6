@@ -1,11 +1,8 @@
-//_______________________________________________________
-//
-// Thema : Kommandozeilenparameter, Dateien & Zeiger
 // Praktikumsaufgabe : 6
 // Professor : Kolja Eger
 // Abgabeversion : 1
-// Datum : 15.12.22
-// Author : Mariam Ahmadi (S1, REE)
+// Datum : 18.12.22
+// Author : Chris Luvas Siewert
 // start.txt , verschiebung.txt
 //_______________________________________________________
 
@@ -16,8 +13,44 @@
 //Auswertung der Kommandozeilenparameter (III)
 #include <stdio.h>
 
+//Aufgabe 3 (Funktion)
+int* find_int(int gesucht, int intArray[], int arrayLength) {
+	int* gesuchtPointer;			//Definition Pointer
 
-//Auswertung der Kommandozeilenparameter (III) -> Vorlersun
+	for (int i = 0; i < arrayLength; i++) {		//Loop für Array
+		if (gesucht == intArray[i]) {			//Gesuchte zahl aus array wird gefunden
+			printf("%d", i);					//Ausgabe position im array
+
+			if (NULL == gesuchtPointer) {			//Falls noch kein vorkommendes gefunden
+				gesuchtPointer = intArray[i];		//Pointer für erste vorkommen setzten
+			}
+		}
+	}
+	return gesuchtPointer;
+}
+//Aufgabe 2 (Funktion)
+void encrypt(FILE* readPointer, FILE* writePointer, int verschiebung) {
+	char curChar;		//curChar -> Current char
+
+	do {
+		curChar = toupper(fgetc(readPointer));		//Umwandeln in großbuchstaben
+
+		if (curChar != EOF) {						//End of field = sind noch zeichen über
+			if ((int)curChar < 65 || (int)curChar > 90) {		//Ausnahme für Sonderzeichen
+				fputc(curChar, writePointer);					//schreiben der Sonderzeichen
+				continue;
+			}
+
+			int charToInt = (int)curChar - 64;					//Umwandeln von Char to int (-64 wegen Ascii tabelle -> Ist leichter)
+			charToInt = (charToInt + verschiebung) % 26;		//atoi-> Umwandeln von char array (String) zu Int
+			fputc(charToInt + 64, writePointer);				//Schreiben in die Datei
+		}
+
+		// Checking if character is not EOF.
+		// If it is EOF stop eading. 
+	} while (curChar != EOF);
+	printf("\n");
+}
 void main(int argc, char* argv[])
 {
 
@@ -28,11 +61,11 @@ void main(int argc, char* argv[])
 
 	//Aufgabe 1: Parameter bestimmen
 	int i;
-	
+
 	for (i = 0; i < argc; i++)
 	{
 		printf("%d. parameter: \"%s\" \n", i, argv[i]); //   [ \" ] -> Formatierung der Gänsefüßchen für die Parameter
-		printf("\n");
+		printf("\n");									//argv -> Array der Parameter
 	}
 
 
@@ -42,7 +75,6 @@ void main(int argc, char* argv[])
 	printf("					Das Alphabet\n");
 	printf("_______________________________________________________\n\n");
 
-	//Aufgabe 2: Verschlüsselung
 	char c[27];
 	c[26] = 0; //26. Element wird auf Null gesetzt (Nochmal nachfragen !)
 	for (int i = 0; i < 26; i++)
@@ -52,37 +84,34 @@ void main(int argc, char* argv[])
 	}
 	printf("\n\n"); //Abstand
 
-	//FILES
-	
-	FILE* ptr;
-	char ch;
+	//Aufgabe 2: Verschlüsselung
+	//Auswertung der Kommandozeilenparameter (III) -> Vorlersung
 
-	// Opening file in reading mode
-	ptr = fopen("start.txt", "r");
+	FILE* readPointer;		//Pointer zum auslesen der datei die in Parameter übergeben wird
+	FILE* writePointer;		//Pointer zum ausgeben der datei die in Parameter übergeben wird
+	char curChar;
 
-	if (NULL == ptr) {
+	// Opening file in reading/write mode
+	readPointer = fopen(argv[1], "r");
+	writePointer = fopen(argv[2], "w");
+
+	//Fehlermeldung falls datei nicht geöffnet werden konnte
+	if (NULL == readPointer) {
 		printf("file can't be opened \n");
+	}
+	if (atoi(argv[3]) < 1 || atoi(argv[3] > 25)) {
+		printf("Verschiebung außerhalb des gültigen Bereiches \n");
 	}
 
 	printf("_______________________________________________________\n\n");
 	printf("					Ursprungsdatei\n");
 	printf("_______________________________________________________\n\n");
 
-	//@geekforgeeks.org -> https://www.geeksforgeeks.org/c-program-to-read-contents-of-whole-file/
-	// Printing what is written in file
-	// character by character using loop.
-	do {
-		ch = fgetc(ptr);
-		printf("%c", ch);
-
-		// Checking if character is not EOF.
-		// If it is EOF stop eading. 
-	} while (ch != EOF);
-	printf("\n");
+	//Funktionsaufruf (Über main)
+	encrypt(readPointer, writePointer, atoi(argv[3]));
 
 	// Closing the file
-	fclose(ptr);
+	fclose(readPointer);
+	fclose(writePointer);
 	return 0;
 }
-
-
