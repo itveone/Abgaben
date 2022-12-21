@@ -1,16 +1,35 @@
-// Praktikumsaufgabe : 6
-// Professor : Kolja Eger
+//
+//_________________START/INTRO__________________________
+// 
 // Abgabeversion : 1
-// Datum : 18.12.22
-// Author : Chris Luvas Siewert
-// start.txt , verschiebung.txt
+// Datum: 17.12.2022
+// Praktikumsaufgabe: 6
+// Professor: Kolja Eger
+// Author: Mariam Ahmadi
+// Benötigte Textdateien: start.txt (mit Text) , verschiebung.txt (ohne Inhalt)
+// 
 //_______________________________________________________
 
-//Standardeinstellung : Anti-Warnung von scanf
-#define _CRT_SECURE_NO_WARNINGS 
+
+//________________NOTIZEN_______________________________
+// 
+//	The second parameter, argv (argument vector), is an array of pointers to arrays of character objects.
+//	The array objects are null-terminated strings, representing the arguments that were entered on the
+//	command line when the program was started. The first element of the array, argv[0], is a pointer to
+//	the character array that contains the program name or invocation name of the program that is being
+//	run from the command line.argv[1] indicates the first argument passed to the program,
+//	argv[2] the second argument, and so on.
+//
+//________________NOTIZEN_______________________________
 
 
-//Auswertung der Kommandozeilenparameter (III)
+
+
+
+//_____________________ PRAKTIKUMSAUFGABE 6: KOMMANDOZEILENPARAMETER, DATEIEN & ZEIGER __________________
+
+
+//INCLUDES/BIBLIOTHEKEN
 #include <stdio.h>
 
 //Aufgabe 3 (Funktion)
@@ -26,19 +45,21 @@ int* find_int(int gesucht, int intArray[], int arrayLength) {
 			}
 		}
 	}
-	return gesuchtPointer;
+	return gesuchtPointer; //Rückgabewert ist ein int 
 }
+
 //Aufgabe 2 (Funktion)
-void encrypt(FILE* readPointer, FILE* writePointer, int verschiebung) {
-	char curChar;		//curChar -> Current char
+void encrypt(FILE* readPointer, FILE* writePointer, int verschiebung) // Funktion encrypt wird in der Main wieder aufgerufen
+{
+	char curChar;		//Variable für den aktuellen Buchstaben
 
 	do {
-		curChar = toupper(fgetc(readPointer));		//Umwandeln in großbuchstaben
+		curChar = toupper(fgetc(readPointer));					//Funktion, um die Buchstaben in Großbuchstaben umzuwandeln
 
-		if (curChar != EOF) {						//End of field = sind noch zeichen über
-			if ((int)curChar < 65 || (int)curChar > 90) {		//Ausnahme für Sonderzeichen
-				fputc(curChar, writePointer);					//schreiben der Sonderzeichen
-				continue;
+		if (curChar != EOF) {									//EOF = End of fiel (Noch zeichen über)
+			if ((int)curChar < 65 || (int)curChar > 90) {		//Intervallbegrenzen wegen Sonderzeichen
+				fputc(curChar, writePointer);					//Schreiben der Sonderzeichen
+				continue;										//Weitere Ausführung
 			}
 
 			int charToInt = (int)curChar - 64;					//Umwandeln von Char to int (-64 wegen Ascii tabelle -> Ist leichter)
@@ -46,12 +67,15 @@ void encrypt(FILE* readPointer, FILE* writePointer, int verschiebung) {
 			fputc(charToInt + 64, writePointer);				//Schreiben in die Datei
 		}
 
-		// Checking if character is not EOF.
-		// If it is EOF stop eading. 
+		 // Kontrolle, ob der aktuelle Buchstabe nicht EOF ist
+		 // Wenn der aktuelel Buchstaben EOF ist, wird die Datei nicht mehr weiter gelesen.
 	} while (curChar != EOF);
-	printf("\n");
+	printf("\n"); //Zeilenbruch
+
+
+
 }
-void main(int argc, char* argv[])
+void main(int argc, char* argv[]) //Mainfunktion gibt keinen Rückgabewert, deshalb void main
 {
 
 	//INTRO - Aufgabe 1
@@ -75,43 +99,47 @@ void main(int argc, char* argv[])
 	printf("					Das Alphabet\n");
 	printf("_______________________________________________________\n\n");
 
-	char c[27];
-	c[26] = 0; //26. Element wird auf Null gesetzt (Nochmal nachfragen !)
+	char c[27]; //Alphabet
+	c[26] = 0; //26. Element wird auf Null gesetzt
+
+	//SCHLEIFENDURCHLAUF: GIBT BUCHSTABEN DES ALPHABETS AUS
 	for (int i = 0; i < 26; i++)
 	{
-		c[i] = 'A' + i;
-		printf(" %c", c[i]);
+		c[i] = 'A' + i; //Zählt die Inhalte des Arrays hoch. C weis automatisch, dass es sich um das Alphabet handelt
+		printf(" %c", c[i]); //Printed alle Buchstaben aus
 	}
-	printf("\n\n"); //Abstand
+	printf("\n\n"); //Doppelter Abstand
 
-	//Aufgabe 2: Verschlüsselung
-	//Auswertung der Kommandozeilenparameter (III) -> Vorlersung
+	//Aufgabe 2: Verschlüsselung & Entschlüsselung
 
-	FILE* readPointer;		//Pointer zum auslesen der datei die in Parameter übergeben wird
-	FILE* writePointer;		//Pointer zum ausgeben der datei die in Parameter übergeben wird
-	char curChar;
+	//VARIABLEN UND POINTER
+	FILE* readPointer;		//Pointer zum auslesen der Datei die in  Variable übergeben wird
+	FILE* writePointer;		//Pointer zum ausgeben der Datei die in Variable übergeben wird
+	char curChar;			// Variable für den "aktuellen" Buchstaben
 
-	// Opening file in reading/write mode
-	readPointer = fopen(argv[1], "r");
+	//ÖFFNEN DER DATEIEN: Lese vs. Bearbeitunsgmodus
+	readPointer = fopen(argv[1], "r"); //
 	writePointer = fopen(argv[2], "w");
 
-	//Fehlermeldung falls datei nicht geöffnet werden konnte
+	//Fehlermeldung, falls die Datei nicht geöffnet werden kann
 	if (NULL == readPointer) {
-		printf("file can't be opened \n");
+		printf("Die Datei kann nicht geöffnet werden.\n");
 	}
 	if (atoi(argv[3]) < 1 || atoi(argv[3] > 25)) {
-		printf("Verschiebung außerhalb des gültigen Bereiches \n");
+		printf("Achtung ! Die Verschiebung liegt außerhalb des gültigen Bereiches !\n");
 	}
 
+
+	//INTRO
 	printf("_______________________________________________________\n\n");
 	printf("					Ursprungsdatei\n");
 	printf("_______________________________________________________\n\n");
 
 	//Funktionsaufruf (Über main)
-	encrypt(readPointer, writePointer, atoi(argv[3]));
+	encrypt(readPointer, writePointer, atoi(argv[3])); //Achtung bei atoi(argv[3]) !
 
 	// Closing the file
-	fclose(readPointer);
-	fclose(writePointer);
-	return 0;
+	fclose(readPointer); //Funktion "fileclose" wird dem Wert von der Variable readPointer übergeben
+	fclose(writePointer); //Funktion von "fileclose" wird dem Wert von der Variable writePointer übergeben
+	return 0; //Programmausführung wird beendet
 }
