@@ -1,0 +1,152 @@
+//_______________________________________________________
+//
+// Thema : Kommandozeilenparameter, Dateien & Zeiger
+// Praktikumsaufgabe : 6
+// Professor : Kolja Eger
+// Abgabeversion : 1
+// Datum : 18.12.22
+// Author : Chris Lucas Siewert & Mariam Ahmadi
+// Notwendige Dateien: start.txt (Mit Inhalt) , verschiebung.txt (Ohne Inhalt)
+//_______________________________________________________
+
+//Standardeinstellung : Anti-Warnung von scanf
+#define _CRT_SECURE_NO_WARNINGS 
+
+#define AUFGABE 1				//HIER ZAHL ÄNDERN FÜR WELCHE AUFGABE AUFGERUFEN WERDEN SOLL!! 1 = Aufgabe 1, 2 = Aufgabe 2, 3 = Aufgabe 3
+
+//INCLUDES/BIBLIOTHEK
+//Auswertung der Kommandozeilenparameter (III)
+#include <stdio.h>
+
+#if AUFGABE == 3 //Begrenzung: Aufgabe 3 (wie ne klasse)
+
+//Aufgabe 3 (Funktion)
+int* find_int(int gesucht, int intArray[], int arrayLength) {
+	int* gesuchtPointer;			//Definition Pointer
+
+	for (int i = 0; i < arrayLength; i++) {		//Loop für Array
+		if (gesucht == intArray[i]) {			//Gesuchte zahl aus array wird gefunden
+			printf("%d", i);					//Ausgabe position im array --> ABER WIE BERECHNEN!!!!!!!!!!!!!!!!!!!!!!
+
+			if (NULL == gesuchtPointer) {			//Falls noch kein vorkommendes gefunden
+				gesuchtPointer = intArray[i];		//Pointer für erste vorkommen setzten
+			}
+		}
+	}
+	return gesuchtPointer;
+}
+
+#endif // AUFGABE == 3
+
+//Aufgabe 2 (Funktion)
+void encrypt(FILE* readPointer, FILE* writePointer, int verschiebung)
+{
+	char curChar;		//curChar -> Aktueller Buchstabe
+
+	do {
+		curChar = toupper(fgetc(readPointer));		//Umwandeln in großbuchstaben  ||  fgetc = Flile get char
+
+		if (curChar != EOF) {						//End of field = sind noch zeichen über
+
+			//Ausnahme für Sonderzeichen
+			if (curChar < 'A' || curChar > 'Z')
+			{
+				fputc(curChar, writePointer);					//schreiben der Sonderzeichen
+				continue;
+			}
+
+			int charToInt = (int)curChar - 64;					//Umwandeln von Char to int (-64 wegen Ascii tabelle -> Ist leichter)
+			charToInt = (charToInt + verschiebung) % 26;		//atoi-> Umwandeln von char array (String) zu Int
+			fputc(charToInt + 64, writePointer);				//Schreiben in die Datei
+		}
+
+		// Checking if character is not EOF.
+		// If it is EOF stop eading. 
+	} while (curChar != EOF);
+	printf("\n");
+}
+
+
+void main(int argc, char* argv[]) //Hauptprogramm hat keinen Rückgabewert
+{
+
+#if AUFGABE == 1 //Begrenzung zu Aufgabe 1 (Klasse)
+	//INTRO - Aufgabe 1
+	printf("_______________________________________________________\n\n");
+	printf("	KOMMANDOZEILENPARAMETER, DATEIEN & ZEIGER\n");
+	printf("_______________________________________________________\n\n");
+
+	//Aufgabe 1: Parameter bestimmen
+	int i;
+
+	//Ästhetik 
+	for (i = 0; i < argc; i++)
+	{
+		printf("%d. parameter: \"%s\" \n", i, argv[i]); //   [ \" ] -> Formatierung der Gänsefüßchen für die Parameter
+		printf("\n");									//argv -> Array der Parameter -> Parameter werden ausgegeben
+	}
+#endif // AUFGABE == 1 -> Endbegrenzung
+
+
+#if AUFGABE == 2 //Begrenzung der Aufgabe 2 (Klasse)
+	//INTRO - Aufgabe 2
+	printf("_______________________________________________________\n\n");
+	printf("					Das Alphabet\n");
+	printf("_______________________________________________________\n\n");
+
+	char c[27];
+	c[26] = 0; //26. Element wird auf Null gesetzt (Nochmal nachfragen !)
+
+	for (int i = 0; i < 26; i++)
+	{
+		c[i] = 'A' + i;
+		printf(" %c", c[i]);
+	}
+	printf("\n\n"); //Abstand
+
+	//Aufgabe 2: Verschlüsselung
+
+
+	FILE* readPointer;		//Pointer zum auslesen der datei die in Parameter übergeben wird
+	FILE* writePointer;		//Pointer zum ausgeben der datei die in Parameter übergeben wird
+	char curChar;			//Zeichen auf dem wir stehen
+
+	// Opening file in reading/write mode
+	readPointer = fopen(argv[1], "r");
+	writePointer = fopen(argv[2], "w");
+
+	//Fehlermeldung falls datei nicht geöffnet werden konnte
+	if (NULL == readPointer) {
+		printf("file can't be opened \n");
+		exit(1);
+	}
+
+	int key = atoi(argv[3]);
+
+	if (key < 1 || key > 25) {		//atoi = String aus Parameter zu Int
+		printf("Verschiebung außerhalb des gültigen Bereiches \n");
+		exit(1);
+	}
+
+	printf("_______________________________________________________\n\n");
+	printf("					Ursprungsdatei\n");
+	printf("_______________________________________________________\n\n");
+
+	//Funktionsaufruf (Über main)
+	encrypt(readPointer, writePointer, key);
+
+	// Closing the file
+	fclose(readPointer);
+	fclose(writePointer);
+#endif // AUFGABE == 2
+
+	//Ende der Aufgabe 3 (Ausruf in der Main)
+	int intArray[5] = { 1, 2, 3, 1, 1 };
+	printf("Bitte geben Sie eine ganze Zahl zwischen 1 und 3 aus.");
+	scanf("%p", &intArray);
+	while (getchar() != '\n');
+	printf("Die Zahl lautet: %p\n", &intArray);
+	return 0;
+
+
+}
