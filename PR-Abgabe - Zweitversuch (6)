@@ -1,82 +1,115 @@
-//_______________________________________________________
+//__________________________________________
 //
-// Thema : Kommandozeilenparameter, Dateien & Zeiger
-//_______________________________________________________
-//
-// Thema : Kommandozeilenparameter, Dateien & Zeiger
-// Praktikumsaufgabe : 6
+// Thema : Kommandozeilenparameter. Dateien & Zeiger 
+// Praktikumsaufgabe : 6 
 // Professor : Kolja Eger
-// Abgabeversion : 1
-// Datum : 02.01.23
-// Author : Chris Lucas Siewert & Mariam Ahmadi
-// Notwendige Dateien: start.txt (Mit Inhalt) , verschiebung.txt (Ohne Inhalt)
-//_______________________________________________________
+// Abgabeversion: 2
+// Datum: 09.01.23
+// Author: Mariam Ahmadi & Chris Siewert
+// Notwendige Dateien: start.txt (Mit Inhalt), verschiedbung.txt (Ohne Inhalt)
+//
+//__________________________________________
 
-//Standardeinstellung : Anti-Warnung von scanf
-#define _CRT_SECURE_NO_WARNINGS 
+//__________________________________________NOTIZEN_______________________________________
+//```´``
+// isalpha(c) is a function in C which can be used to check if the passed character is an alphabet or not.
+// It returns a non-zero value if it’s an alphabet else it returns 0. For example, it returns non-zero values
+// for ‘a’ to ‘z’ and ‘A’ to ‘Z’ and zeroes for other characters. Similarly, isdigit(c) is a function in C which
+// can be used to check if the passed character is a digit or not. It returns a non-zero value if it’s a digit 
+// else it returns 0. 
+//
+//fputc() gibt einen einzelnen Buchstaben (Char als Int kodiert) aus. Hierfür übergibt man den ASCII-Code als Integerwert.
+//
+//__________________________________________NOTIZEN_______________________________________
 
-#define AUFGABE 1		//HIER ZAHL ÄNDERN FÜR WELCHE AUFGABE AUFGERUFEN WERDEN SOLL!! 1 = Aufgabe 1, 2 = Aufgabe 2, 3 = Aufgabe 3
 
-//INCLUDES/BIBLIOTHEK
+
+// Standardeinstellung: Anti-Warnung von scanf
+#define _CRT_SECURE_NO_WARNINGS
+
+// Makro zum Wechseln der Aufgabenstellungen
+#define Aufgabe 1
+ //HIER ZAHL ÄNDERN FÜR WELCHE AUFGABE AUFGERUFEN WERDEN SOLL
+                // 1 = Aufgabe 1, 2 = Aufgabe 2, 3 = Aufgabe 3 
+
+
+//INCLUDES/BIBLIOTHEKEN
 //Auswertung der Kommandozeilenparameter (III)
-#include <stdio.h>
-#include <stdlib.h>
-#include <ctype.h>
+#include <stdio.h> //Standard
+#include <stdlib.h> //Nutzung für NULL: This macro is the value of a null pointer constant.
+#include <ctype.h> //Nutzung von toupper (converts to uppercase alphabet)
+#include <string.h> //NULL
+#include <math.h>
 
-#if AUFGABE == 3 //Begrenzung: Aufgabe 3 (wie ne klasse)
+//MAKRO 
+#if AUFGABE == 3 //Begrenzung: Aufgabe  (Wie ne Klasse)
 
-//Aufgabe 3 (Funktion)
-int* find_int(int gesucht, int intArray[], int arrayLength) {
-	int* gesuchtPointer;			//Definition Pointer
+//AUFGABE 3 (FUNKTION)
+int* find_int (int value, int* vec, int length)
+{
+    for (int i = 0; i < length, i++) //For-Schleife: Jedes Element im Array durchgehen
+    {
+        //isdigit = Ob Zahl (gespeichert als Character) || isalpha = Char-Buchstaben aus dem Alphabet (Char)
+        if (isdigit(vec[1]) || isalpha(vec[i])) // Ausnahmeprüfung ob im Array Character-Zahlen oder Character-Buchstaben
+        {
+            return NULL; //NULL weil kein Wert zurückgegeben wird, Rückgabewert wird 
+        }
 
-	for (int i = 0; i < arrayLength; i++) {		//Loop für Array
-		if (gesucht == intArray[i]) {			//Gesuchte zahl aus array wird gefunden
-			printf("%d", i);					//Ausgabe position im array --> ABER WIE BERECHNEN!!!!!!!!!!!!!!!!!!!!!!
-
-			if (NULL == gesuchtPointer) {			//Falls noch kein vorkommendes gefunden
-				gesuchtPointer = intArray[i];		//Pointer für erste vorkommen setzten
-			}
-		}
-	}
-	return gesuchtPointer;
+		return &vec[i]; //Rückgabewert ist die Adresse vom Element des Arrays
+    }
+    return NULL; //Returnwert wird an die Main zurückgegeben
 }
-
 #endif // AUFGABE == 3
 
-//Aufgabe 2 (Funktion)
-void encrypt(FILE* readPointer, FILE* writePointer, int verschiebung)
+//AUFGABE 2 (FUNKTION)
+void encrypt (FILE* readPointer, FILE* writePointer, int verschiebung)
 {
-	char curChar;		//curChar -> Aktueller Buchstabe
+    char curChar; //curChar -> Aktueller Buchstabe
 
-	do {
-		curChar = toupper(fgetc(readPointer));		//Umwandeln in großbuchstaben  ||  fgetc = Flile get char
+    do //do-while-Schleife: Kopfgesteuerte Schleife, Bedingung wir am Ende geprüft
+    {
+        curChar = toupper(fgetc(readPointer)); //Umwandeln in Großbuchstaben von den Characters aus der File, die geöffnet wird
 
-		if (curChar != EOF) {						//End of field = sind noch zeichen über
+        if (curChar != EOF) //End of field = Wenn Zeichen übrig sind, die nicht A-Z sind (Auf der ASCII-Tabelle)
+        {
+            //Ausnahme für Sonderzeichen
+            if (curChar < 'A' || curChar > 'Z') //Intervall in der ASCII-Tabelle, welches von Groß A bis Groß Z ausgeschlossen wird.
+            {
+                fputc(curChar, writePointer); //Schreiben der Sonderzeichen (Nochmal anschauen  wegen write pointer!!!)
+                continue; //kp
+            }
 
-			//Ausnahme für Sonderzeichen
-			if (curChar < 'A' || curChar > 'Z')
-			{
-				fputc(curChar, writePointer);					//schreiben der Sonderzeichen
-				continue;
-			}
+            //Begrenzung: "-64" vs "+64"
+            //Wir ziehen von der Ascii-Tabelle -64 ab, damit wir A der Zahl 1 zuweisen. Da in der Ascii-Tabelle 64 für A steht,
+            //aber da wir mit der Anzahl der Buchstaben (1-26) arbeiten, müsse wir den Wert von umwandeln. 
+            //Beid der Umwandlung benötigen wir die Begrenzung von Modulo 26, damit wir die Verschlüsselung resetten können vom Schritt pro Char.
+            //
 
-			int charToInt = (int)curChar - 64;					//Umwandeln von Char to int (-64 wegen Ascii tabelle -> Ist leichter)
-			charToInt = (charToInt + verschiebung) % 26;		//atoi-> Umwandeln von char array (String) zu Int
-			fputc(charToInt + 64, writePointer);				//Schreiben in die Datei
-		}
 
-		// Checking if character is not EOF.
-		// If it is EOF stop eading. 
-	} while (curChar != EOF);
-	printf("\n");
+            int charToInt = (int)curChar - 64; //Umwandeln von Char int ( A: 64 <- ASCII-Tabelle).
+            //Umwandlung von Buchstaben zu Zahlen, damit wir unseren Code verschlüsselnm können. Dies ist nur mit Zahlen möglich.
+            charToInt = (charToInt + verschiebung) % 26; //Modulo: Begrenzung des Alphabets (wegen 26 Buchstaben), damit man beid er Verschiebung wieder von A anfängt
+            fputc(charToInt + 64, writePointer); //+64 : Damit die Werte wieder in dem richtigen Bereich der ASCII-Tabelle stehen
+            //writePointer -> Schreiben in die Datei durch Pointer
+        }
+
+        //Wir machen solange weiter, bis unser currentChar nicht der letzte Buchstabe ist die wir einlesen.
+    } while (curChar != EOF); 
+    printf("\n"); //Zeilenumbruch
 }
 
-
-void main(int argc, char* argv[]) //Hauptprogramm hat keinen Rückgabewert
+int main (int argc, char* argv[]) //Hauptprogramm hat keinen Rückgabewert
 {
 
+
+
+//_____AUFGABE 1_____
+// Parameterausgabe über Powershell 
+//
+//_________________________________
+
 #if AUFGABE == 1 //Begrenzung zu Aufgabe 1 (Klasse)
-	//INTRO - Aufgabe 1
+//INTRO - Aufgabe 1
 	printf("_______________________________________________________\n\n");
 	printf("	KOMMANDOZEILENPARAMETER, DATEIEN & ZEIGER\n");
 	printf("_______________________________________________________\n\n");
@@ -85,13 +118,21 @@ void main(int argc, char* argv[]) //Hauptprogramm hat keinen Rückgabewert
 	int i;
 
 	//Ästhetik 
-	for (i = 0; i < argc; i++)
+	for (i = 0; i < argc; i++) // (was war argc nochmal?)
 	{
-		printf("%d. parameter: \"%s\" \n", i, argv[i]); //   [ \" ] -> Formatierung der Gänsefüßchen für die Parameter
+		printf("%d. parameter: \"%s\" \n", i, argv[i]); //   [ \" ] -> Formatierung der Gänsefüßchen für die Parameter (nochmal anschauen)
 		printf("\n");									//argv -> Array der Parameter -> Parameter werden ausgegeben
 	}
 #endif // AUFGABE == 1 -> Endbegrenzung
 
+
+
+
+//_____AUFGABE 2______
+//
+// Buchstaben-Initalisierung, Verschlüsselung, Arbeiten mit Files, Inhalt verschieben
+//
+//____________________
 
 #if AUFGABE == 2 //Begrenzung der Aufgabe 2 (Klasse)
 	//INTRO - Aufgabe 2
@@ -99,13 +140,13 @@ void main(int argc, char* argv[]) //Hauptprogramm hat keinen Rückgabewert
 	printf("					Das Alphabet\n");
 	printf("_______________________________________________________\n\n");
 
-	char c[27];
+	char c[26];
 	c[26] = 0; //26. Element wird auf Null gesetzt (Nochmal nachfragen !)
 
 	for (int i = 0; i < 26; i++)
 	{
-		c[i] = 'A' + i;
-		printf(" %c", c[i]);
+		c[i] = 'A' +i ; //Initialisierung der Buchstaben (hab vergessen wofür +i steht)
+		printf(" %c", c[i]); //printen die Buchstaben aus 
 	}
 	printf("\n\n"); //Abstand
 
@@ -117,24 +158,31 @@ void main(int argc, char* argv[]) //Hauptprogramm hat keinen Rückgabewert
 	char curChar;			//Zeichen auf dem wir stehen
 
 	// Opening file in reading/write mode
-	readPointer = fopen(argv[1], "r");
-	writePointer = fopen(argv[2], "w");
+	readPointer = fopen(argv[1], "r"); //Open file -> Command to read //readPointer = Den Wert von der Funktion geben wir dem "readPointer" zu.
+	// In readPointer wird der Rückgabewert der Speicherplatz-Adresse von dem geöffneten File geschrieben. 
+	// Was in der Klammer der Funktion steht "übergeben" wir der Funktion zu
 
-	//Fehlermeldung falls datei nicht geöffnet werden konnte
-	if (readPointer == NULL) {
+	writePointer = fopen(argv[2], "w"); //Open gile -> Comman to write in it 
+
+	//Fehlermeldung falls Datei nicht geöffnet werden konnte
+	if (readPointer == NULL)
+    {
 		printf("file can't be opened \n");
-		exit(1);
+		exit(1); //damit beenden wir das komplette Programm/Code
 	}
-	if (writePointer == NULL) {
+
+	if (writePointer == NULL)
+    {
 		printf("write file can't be opened \n");
-		exit(1);
+		exit(1); //damit beenden wir den kompletten Code
 	}
 
-	int key = atoi(argv[3]);
-
-	if (key < 1 || key > 25) {		//atoi = String aus Parameter zu Int
+	//Verschlüsselungs-Key: 5 
+	int key = atoi(argv[3]); //atoi = String aus Parameter zu Int. Buchstaben in Ints
+	if (key < 1 || key > 25) //Wir begrenzen das Verschlüsselungs-Intervall (in der ASCII-Tabelle), da wir nur mit Großbuchstaben arbeiten (im Alphabet)
+    {		
 		printf("Verschiebung außerhalb des gültigen Bereiches \n");
-		exit(1);
+		exit(1); // mit exit(1) beenden wir das ganze Programm
 	}
 
 	printf("_______________________________________________________\n\n");
@@ -142,28 +190,38 @@ void main(int argc, char* argv[]) //Hauptprogramm hat keinen Rückgabewert
 	printf("_______________________________________________________\n\n");
 
 	//Funktionsaufruf (Über main)
-	encrypt(readPointer, writePointer, key);
+	encrypt(readPointer, writePointer, key); //Wir übergeben unserer Verschlüsselungs-Funktion den Wert von zwei Pointer und dem (Verschlüsselungs-)Schritt
+	// .PRP1_06 gleich enycrpt (Ausführungsnahme der exe-Datei)
 
-	// Closing the file
-	fclose(readPointer);
-	fclose(writePointer);
+	// Closing the file we worked on e.g. by raeding the file or writing in it. 
+	fclose(readPointer); //Wir geben der Funktion den Wert von readPointer hinzu bzw. wir schließen die Datei die wir eingelesen haben (start.txt)
+	fclose(writePointer); //Wir gebeb der Funktion den Wert von writePointer hinzu bzw. wir schließen die Dateiin der wir reingeschrieben haben (verschiebung.txt)
+
 #endif // AUFGABE == 2
 
 
-	
+//______AUFGABE 3____________
+// Adresse auspucken von nem Array
+//
+//
 
+#if AUFGABE == 3
+	int vec[] = { 3, 1, 3, 1, 5}; //Defining a array
+	int value = 1; //Let's say we choose number 1 as a value
+	int* found = find_int(value, vec, 5); //Defining a pointer and passing the value to the function find_int, which works with the additional array
 
-	//Ende der Aufgabe 3 (Ausruf in der Main)
-	int intArray[5] = { 1, 2, 3, 1, 1 };
-	printf("Bitte geben Sie eine ganze Zahl zwischen 1 und 3 aus.");
-	scanf("%p", &intArray);
-	while (getchar() != '\n');
-	printf("Die Zahl lautet: %p\n", &intArray);
+	if (found != NULL) //if the value was found / if the value isn't not found then printf the action 
+    {
+		printf("Der Wert %d wurde gefunden an der Adresse %p\n", *found, found); //printf: action
+	}
+	else {
+		printf("Der Wert %d wurde nicht gefunden\n", value);
+	}
 	return 0;
-
-	
-
-
+}
+#endif //Ende von Aufgabe 3 
 
 
 }
+
+	
